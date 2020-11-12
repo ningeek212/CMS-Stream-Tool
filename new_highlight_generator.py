@@ -124,6 +124,7 @@ def stop():
     cv2.destroyAllWindows()
     if map_number >= num_maps:
         input('Goodbye :)')
+        replay_checker.checking = False  # stop checking for replays (thread will stop as a result)
         sys.exit()
     else:
         out = cv2.VideoWriter('current_highlights.mp4',
@@ -135,14 +136,10 @@ def stop():
 
 
 hotkey1 = HotKey(
-    [Key.f5],
-    refresh
-)
-hotkey2 = HotKey(
     [Key.f6],
     stop
 )
-hotkeys = [hotkey1, hotkey2]
+hotkeys = [hotkey1]
 
 def signal_press_to_hotkeys(key):
     for hotkey in hotkeys:
@@ -180,6 +177,7 @@ class ReplayChecker:
                         refresh()
                     else:
                         sleep(1)
+
 
 replay_checker = ReplayChecker("clips", "replay")
 replay_checker.start()
