@@ -148,11 +148,6 @@ def signal_press_to_hotkeys(key):
         hotkey.release(l.canonical(key))
 
 
-def signal_release_to_hotkeys(key):
-    for hotkey in hotkeys:
-        hotkey.release(l.canonical(key))
-
-
 class ReplayChecker:
     def __init__(self, folder, keyword):
         self.obs_output_folder = folder
@@ -187,5 +182,6 @@ class ReplayChecker:
 replay_checker = ReplayChecker("clips", "replay")
 replay_checker.start()
 
-with Listener(on_press=signal_press_to_hotkeys, on_release=signal_release_to_hotkeys) as l:
+
+with Listener(on_press=signal_press_to_hotkeys) as l:
     l.join()
