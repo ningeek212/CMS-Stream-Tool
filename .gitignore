@@ -6,8 +6,7 @@ __pycache__/
 .idea/
 **/clips
 **/highlights
-current_highlights.mp4
-highlight_reel.mp4
+*.mp4
 
 # C extensions
 *.so

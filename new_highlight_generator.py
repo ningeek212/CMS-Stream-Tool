@@ -147,10 +147,5 @@ def signal_press_to_hotkeys(key):
         hotkey.release(l.canonical(key))
 
 
-def signal_release_to_hotkeys(key):
-    for hotkey in hotkeys:
-        hotkey.release(l.canonical(key))
-
-
-with Listener(on_press=signal_press_to_hotkeys, on_release=signal_release_to_hotkeys) as l:
+with Listener(on_press=signal_press_to_hotkeys) as l:
     l.join()
