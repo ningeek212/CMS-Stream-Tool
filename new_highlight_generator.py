@@ -89,7 +89,7 @@ def refresh():
         print('End of clip, time elasped: ' + str(time() - start_time))
         previous_frames = end_frames
         new_highlight = False
-        move('clips/' + clip, 'clips/old clips/' + clip)
+        move('clips/' + clip, 'clips/old_clips/' + clip)
 
 
 def stop():
