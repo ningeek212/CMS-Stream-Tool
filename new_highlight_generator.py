@@ -52,7 +52,7 @@ previous_frames = []
 
 def refresh():
     global map_number, new_highlight, begin_frames, previous_frames
-    clips = [n for n in listdir('clips') if n[0] == 'r' and n[-4:] == '.mp4']
+    clips = [n for n in listdir('clips') if n[:3] == 'rep' and n[-4:] == '.mp4']
     total_clips = len(clips)
 
     for index, clip in enumerate(clips):
@@ -94,20 +94,27 @@ def refresh():
 def stop():
     global map_number, out, new_highlight, begin_frames, previous_frames
     start_time = time()
-    print('')
-    print('Adding last frames...')
-    for frame_count in range(60):
-        new_frame = cv2.addWeighted(previous_frames[frame_count], (60 - frame_count) / 60, begin_frames[frame_count],
-                                    frame_count / 60, 0)
-        out.write(new_frame)
-    new_highlight = True
-    begin_frames = []
-    previous_frames = []
-    print('Ending ' + maps[map_number] + ' clip collection')
-    print('=======================')
-    out.release()
-    copyfile('current_highlights.mp4', 'highlights/{} vs {} {}.mp4'.format(teams[0], teams[1], maps[map_number]))
-    copyfile('current_highlights.mp4', 'highlight_reel.mp4')
+    if not begin_frames:
+        print('')
+        print('No clips were added... skipping map')
+        print('Ending ' + maps[map_number] + ' clip collection')
+        print('=======================')
+        out.release()
+    else:
+        print('')
+        print('Adding last frames...')
+        for frame_count in range(60):
+            new_frame = cv2.addWeighted(previous_frames[frame_count], (60 - frame_count) / 60, begin_frames[frame_count],
+                                        frame_count / 60, 0)
+            out.write(new_frame)
+        new_highlight = True
+        begin_frames = []
+        previous_frames = []
+        print('Ending ' + maps[map_number] + ' clip collection')
+        print('=======================')
+        out.release()
+        copyfile('current_highlights.mp4', 'highlights/{} vs {} {}.mp4'.format(teams[0], teams[1], maps[map_number]))
+        copyfile('current_highlights.mp4', 'highlight_reel.mp4')
     map_number += 1
     cv2.destroyAllWindows()
     if map_number >= num_maps:
