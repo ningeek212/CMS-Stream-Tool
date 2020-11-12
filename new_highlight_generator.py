@@ -7,6 +7,9 @@ from shutil import copyfile, move
 from time import sleep, time
 from threading import Thread
 
+LATEST_INSTANT_REPLAY_FILENAME = "latest_replay.mp4"
+CURRENT_INSTANT_REPLAY_FILENAME = "current_replay.mp4"
+
 # # Get team names, map names, and file locations from user
 # correct_input = False
 # while not correct_input:
@@ -57,10 +60,11 @@ previous_frames = []
 
 
 class ReplayChecker:
-    def __init__(self, folder, keyword):
+    def __init__(self, folder, keyword, latest_clip_path):
         self.obs_output_folder = folder
         self.keyword = keyword
         self.thread = Thread(target=self.check_loop, daemon=True)
+        self.latest_clip_path = latest_clip_path
         self.checking = True
 
     def start(self):
@@ -83,6 +87,7 @@ class ReplayChecker:
                     file_path = self.obs_output_folder + "/" + path
                     if self.check_file_finished(file_path, 10, 0.1):
                         print("File complete")
+                        copyfile(file_path, self.latest_clip_path)  # for instant replay
                         refresh()
                     else:
                         sleep(1)
@@ -167,11 +172,18 @@ def stop():
         print('Beginning ' + maps[map_number] + ' clip collection')
 
 
-hotkey1 = HotKey(
-    [Key.f6],
-    stop
-)
-hotkeys = [hotkey1]
+def update_instant_replay():
+    print("Copying latest replay to OBS source...")
+    copyfile(LATEST_INSTANT_REPLAY_FILENAME, CURRENT_INSTANT_REPLAY_FILENAME)
+    print("Finished copying")
+
+
+stop_hotkey = HotKey([Key.f6], stop)
+
+instant_replay_hotkey = HotKey([Key.f5], update_instant_replay)
+
+hotkeys = [stop_hotkey, instant_replay_hotkey]
+
 
 def signal_press_to_hotkeys(key):
     for hotkey in hotkeys:
@@ -179,7 +191,7 @@ def signal_press_to_hotkeys(key):
         hotkey.release(l.canonical(key))
 
 
-replay_checker = ReplayChecker("clips", "replay")
+replay_checker = ReplayChecker("clips", "replay", LATEST_INSTANT_REPLAY_FILENAME)
 replay_checker.start()
 
 
