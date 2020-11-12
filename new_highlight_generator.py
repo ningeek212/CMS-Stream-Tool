@@ -5,37 +5,40 @@ from os import listdir
 from shutil import copyfile, move
 from time import sleep, time
 
-# Get team names, map names, and file locations from user
-correct_input = False
-while not correct_input:
-    teams = []
-    teams.append(input('Enter the name of team 1: '))
-    teams.append(input('Enter the name of team 2: '))
-
-    num_maps = int(input('Enter number of maps: '))
-    maps = []
-    for i in range(num_maps):
-        maps.append(input('Enter the name of map {}: '.format(i + 1)))
-    print('')
-    print('=======================')
-    print('Teams:')
-    print(*teams, sep=', ')
-    print('')
-    print('Maps:')
-    print(*maps, sep=', ')
-    print('=======================')
-    print('')
-    answer = input('Is this information correct? (y/n) ')
-    correct_response = False
-    while not correct_response:
-        if answer == 'y' or answer == 'Y':
-            correct_input = True
-            break
-        elif answer == 'n' or answer == 'N':
-            break
-        else:
-            print('')
-            answer = input('Please enter \'y\' for yes or \'n\' for no: ')
+# # Get team names, map names, and file locations from user
+# correct_input = False
+# while not correct_input:
+#     teams = []
+#     teams.append(input('Enter the name of team 1: '))
+#     teams.append(input('Enter the name of team 2: '))
+#
+#     num_maps = int(input('Enter number of maps: '))
+#     maps = []
+#     for i in range(num_maps):
+#         maps.append(input('Enter the name of map {}: '.format(i + 1)))
+#     print('')
+#     print('=======================')
+#     print('Teams:')
+#     print(*teams, sep=', ')
+#     print('')
+#     print('Maps:')
+#     print(*maps, sep=', ')
+#     print('=======================')
+#     print('')
+#     answer = input('Is this information correct? (y/n) ')
+#     correct_response = False
+#     while not correct_response:
+#         if answer == 'y' or answer == 'Y':
+#             correct_input = True
+#             break
+#         elif answer == 'n' or answer == 'N':
+#             break
+#         else:
+#             print('')
+#             answer = input('Please enter \'y\' for yes or \'n\' for no: ')
+teams = ['1', '2']
+num_maps = 3
+maps = ['a', 'b', 'c']
 
 print('')
 print('Press f5 to add clips to the highlight.  Press f6 to end clip collection for the map.')
@@ -65,7 +68,7 @@ def refresh():
         print('Adding clip {}/{}'.format(index + 1, total_clips))
         end_frames = []
 
-        while (cap.isOpened()):
+        while cap.isOpened():
             ret, frame = cap.read()
             if not ret:
                 cap.release()
@@ -86,7 +89,7 @@ def refresh():
                 print('{:2.2f}% done, {:2.2f}s'.format(100 * frame_count / total_frames, time() - start_time), end='\r')
             if cv2.waitKey(1) & 0xFF == ord('q'):
                 break
-        print('End of clip, time elasped: ' + str(time() - start_time))
+        print('End of clip, time elapsed: ' + str(time() - start_time))
         previous_frames = end_frames
         new_highlight = False
         move('clips/' + clip, 'clips/old_clips/' + clip)
@@ -94,7 +97,6 @@ def refresh():
 
 def stop():
     global map_number, out, new_highlight, begin_frames, previous_frames
-    start_time = time()
     if not begin_frames:
         print('')
         print('No clips were added... skipping map')
@@ -105,8 +107,8 @@ def stop():
         print('')
         print('Adding last frames...')
         for frame_count in range(60):
-            new_frame = cv2.addWeighted(previous_frames[frame_count], (60 - frame_count) / 60, begin_frames[frame_count],
-                                        frame_count / 60, 0)
+            new_frame = cv2.addWeighted(previous_frames[frame_count], (60 - frame_count) / 60,
+                                        begin_frames[frame_count], frame_count / 60, 0)
             out.write(new_frame)
         new_highlight = True
         begin_frames = []
