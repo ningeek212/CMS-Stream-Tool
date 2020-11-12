@@ -2,8 +2,10 @@ import cv2
 import sys
 from pynput.keyboard import HotKey, Key, Listener
 from os import listdir
+from os.path import getsize
 from shutil import copyfile, move
 from time import sleep, time
+from threading import Thread
 
 # # Get team names, map names, and file locations from user
 # correct_input = False
@@ -92,7 +94,7 @@ def refresh():
         print('End of clip, time elapsed: ' + str(time() - start_time))
         previous_frames = end_frames
         new_highlight = False
-        move('clips/' + clip, 'clips/old_clips/' + clip)
+        move('clips/' + clip, 'old_clips/' + clip)
 
 
 def stop():
@@ -142,11 +144,45 @@ hotkey2 = HotKey(
 )
 hotkeys = [hotkey1, hotkey2]
 
-
 def signal_press_to_hotkeys(key):
     for hotkey in hotkeys:
         hotkey.press(l.canonical(key))
         hotkey.release(l.canonical(key))
+
+
+class ReplayChecker:
+    def __init__(self, folder, keyword):
+        self.obs_output_folder = folder
+        self.keyword = keyword
+        self.thread = Thread(target=self.check_loop, daemon=True)
+        self.checking = True
+
+    def start(self):
+        self.thread.start()
+
+    def check_file_finished(self, file_path, samples, interval):
+        file_size_list = []
+        for x in range(0, samples):
+            file_size = getsize(filename=file_path)  # sample the file size of the replay being saved by OBS
+            file_size_list.append(file_size)
+            sleep(interval)
+        outcome = all(x == file_size_list[0] for x in file_size_list)  # checks to see if last 10 samples are equal
+        return outcome
+
+    def check_loop(self):
+        while self.checking:
+            for path in listdir(self.obs_output_folder):
+                if self.keyword in path:
+                    print("New replay detected, waiting for file to be complete")
+                    file_path = self.obs_output_folder + "/" + path
+                    if self.check_file_finished(file_path, 10, 0.1):
+                        print("File complete")
+                        refresh()
+                    else:
+                        sleep(1)
+
+replay_checker = ReplayChecker("clips", "replay")
+replay_checker.start()
 
 
 with Listener(on_press=signal_press_to_hotkeys) as l:

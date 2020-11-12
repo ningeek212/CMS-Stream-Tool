@@ -5,5 +5,4 @@ A tool for CMS Streamers to be able to collect clips and create a highlight reel
 <li>Add GUI</li>
 <li>Process game stats post map</li>
 <li>Update cap/map score in OBS</li>
-<li>Automatically add clips when added to clips folder</li>
 <li>Add hotkey to save most recent clip for instant replay</li>
