@@ -20,6 +20,7 @@ while not correct_input:
     print('=======================')
     print('Teams:')
     print(*teams, sep=', ')
+    print('')
     print('Maps:')
     print(*maps, sep=', ')
     print('=======================')
