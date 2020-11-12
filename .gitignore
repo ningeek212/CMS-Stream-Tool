@@ -4,6 +4,10 @@ __pycache__/
 *$py.class
 
 .idea/
+**/clips
+**/highlights
+current_highlights.mp4
+highlight_reel.mp4
 
 # C extensions
 *.so
