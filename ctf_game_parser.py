@@ -27,8 +27,8 @@ class CTFGameParser:
         table_loc = re.split('(<table width=\"100%\" border=\"1\">)|(</table>)', game_html)
         stat_table_html = table_loc[1] + table_loc[3] + table_loc[5]
         kit_table_html = table_loc[7] + table_loc[9] + table_loc[11]
-        self.stat_table = html.read_html(stat_table_html)
-        self.kit_table = html.read_html(kit_table_html)
+        self.stat_table = html.read_html(stat_table_html)[0]
+        self.kit_table = html.read_html(kit_table_html)[0]
 
     class CTFGameLookupHTMLParser(HTMLParser):
         def __init__(self, ctf_server):
