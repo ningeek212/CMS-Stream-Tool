@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>CMS Stream Tool - Info Card</title>
+    <link rel="stylesheet" href="../assets/fonts/fonts.css">
+    <script src="../assets/jquery-3.5.1.js"></script>
+</head>
+<script>
+$(document).ready(function(){
+    $("#stats-container").hide();
+    $(".card").hide();
+    $(".card").fadeIn(2000, function(){
+$("#stats-container").slideDown(1000);
+    });
+
+
+});
+</script>
+<style>
+    .card {
+  border-radius: 20px;
+  width: 800px;
+  background: #131313;
+  }
+
+  .container {
+  padding: 2px 16px 16px 16px;
+  }
+
+  .title-font {
+  font-family: PermanentMarker;
+  color: white;
+  width: 100%;
+  font-size: 60px;
+  text-align: center;
+  }
+
+  .white-font {
+  font-family: VerdanaBold;
+  color: white;
+  text-align: left;
+  width: 100%;
+  }
+
+  .player-icon{
+  border-radius: 5px;
+  }
+
+  .name-icon-container{
+  display: flex;
+  align-items: center;
+  }
+
+}
+
+</style>
+<body>
+
+
+<div class="card">
+    <img src="../images/cms_stats.png" style="width:100%; border-radius: 20px 20px 0 0;" id="cms-image">
+    <div class="container" id="stats-container">
+
+    </div>
+</div>
+</body>
+</html>
