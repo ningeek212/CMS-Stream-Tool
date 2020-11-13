@@ -7,6 +7,9 @@ from shutil import copyfile, move
 from time import sleep, time
 from threading import Thread
 
+LATEST_INSTANT_REPLAY_FILENAME = "latest_replay.mp4"
+CURRENT_INSTANT_REPLAY_FILENAME = "current_replay.mp4"
+
 # # Get team names, map names, and file locations from user
 # correct_input = False
 # while not correct_input:
@@ -54,6 +57,41 @@ map_number = 0
 new_highlight = True
 begin_frames = []
 previous_frames = []
+
+
+class ReplayChecker:
+    def __init__(self, folder, keyword, latest_clip_path):
+        self.obs_output_folder = folder
+        self.keyword = keyword
+        self.thread = Thread(target=self.check_loop, daemon=True)
+        self.latest_clip_path = latest_clip_path
+        self.checking = True
+
+    def start(self):
+        self.thread.start()
+
+    @staticmethod
+    def check_file_finished(file_path, samples, interval):
+        file_size_list = []
+        for x in range(0, samples):
+            file_size = getsize(filename=file_path)  # sample the file size of the replay being saved by OBS
+            file_size_list.append(file_size)
+            sleep(interval)
+        outcome = all(x == file_size_list[0] for x in file_size_list)  # checks to see if last 10 samples are equal
+        return outcome
+
+    def check_loop(self):
+        while self.checking:
+            for path in listdir(self.obs_output_folder):
+                if self.keyword in path:
+                    print("New replay detected, waiting for file to be complete")
+                    file_path = self.obs_output_folder + "/" + path
+                    if self.check_file_finished(file_path, 10, 0.1):
+                        print("File complete")
+                        copyfile(file_path, self.latest_clip_path)  # for instant replay
+                        refresh()
+                    else:
+                        sleep(1)
 
 
 def refresh():
@@ -124,6 +162,7 @@ def stop():
     cv2.destroyAllWindows()
     if map_number >= num_maps:
         input('Goodbye :)')
+        replay_checker.checking = False  # stop checking for replays (thread will stop as a result)
         sys.exit()
     else:
         out = cv2.VideoWriter('current_highlights.mp4',
@@ -134,15 +173,17 @@ def stop():
         print('Beginning ' + maps[map_number] + ' clip collection')
 
 
-hotkey1 = HotKey(
-    [Key.f5],
-    refresh
-)
-hotkey2 = HotKey(
-    [Key.f6],
-    stop
-)
-hotkeys = [hotkey1, hotkey2]
+def update_instant_replay():
+    print("Copying latest replay to OBS source...")
+    copyfile(LATEST_INSTANT_REPLAY_FILENAME, CURRENT_INSTANT_REPLAY_FILENAME)
+    print("Finished copying")
+
+
+stop_hotkey = HotKey([Key.f6], stop)
+
+instant_replay_hotkey = HotKey([Key.f5], update_instant_replay)
+
+hotkeys = [stop_hotkey, instant_replay_hotkey]
 
 
 def signal_press_to_hotkeys(key):
@@ -151,40 +192,7 @@ def signal_press_to_hotkeys(key):
         hotkey.release(l.canonical(key))
 
 
-class ReplayChecker:
-    def __init__(self, folder, keyword):
-        self.obs_output_folder = folder
-        self.keyword = keyword
-        self.thread = Thread(target=self.check_loop, daemon=True)
-        self.checking = True
-
-    def start(self):
-        self.thread.start()
-
-    @staticmethod
-    def check_file_finished(file_path, samples, interval):
-        file_size_list = []
-        for x in range(0, samples):
-            file_size = getsize(filename=file_path)  # sample the file size of the replay being saved by OBS
-            file_size_list.append(file_size)
-            sleep(interval)
-        outcome = all(x == file_size_list[0] for x in file_size_list)  # checks to see if last 10 samples are equal
-        return outcome
-
-    def check_loop(self):
-        while self.checking:
-            for path in listdir(self.obs_output_folder):
-                if self.keyword in path:
-                    print("New replay detected, waiting for file to be complete")
-                    file_path = self.obs_output_folder + "/" + path
-                    if self.check_file_finished(file_path, 10, 0.1):
-                        print("File complete")
-                        refresh()
-                    else:
-                        sleep(1)
-
-
-replay_checker = ReplayChecker("clips", "replay")
+replay_checker = ReplayChecker("clips", "replay", LATEST_INSTANT_REPLAY_FILENAME)
 replay_checker.start()
 
 with Listener(on_press=signal_press_to_hotkeys) as l:
