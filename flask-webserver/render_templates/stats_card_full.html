@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>CMS Stream Tool - Info Card</title>
+    <link rel="stylesheet" href="../assets/fonts/fonts.css">
+    <script src="../assets/jquery-3.5.1.js"></script>
+</head>
+<script>
+$(document).ready(function(){
+    $("#stats-container").hide();
+    $(".card").hide();
+    $(".card").fadeIn(2000, function(){
+$("#stats-container").slideDown(1000);
+    });
+
+
+});
+</script>
+<style>
+    .card {
+  border-radius: 20px;
+  width: 800px;
+  background: #131313;
+  }
+
+  .container {
+  padding: 2px 16px 16px 16px;
+  }
+
+  .title-font {
+  font-family: PermanentMarker;
+  color: white;
+  width: 100%;
+  font-size: 60px;
+  text-align: center;
+  }
+
+  .white-font {
+  font-family: VerdanaBold;
+  color: white;
+  text-align: left;
+  width: 100%;
+  }
+
+  .player-icon{
+  border-radius: 5px;
+  }
+
+  .name-icon-container{
+  display: flex;
+  align-items: center;
+  }
+
+}
+
+</style>
+<body>
+
+
+<div class="card">
+    <img src="../images/cms_stats.png" style="width:100%; border-radius: 20px 20px 0 0;" id="cms-image">
+    <div class="container" id="stats-container">
+        <h1 class="title-font">Map 1 - Adrenaline I</h1>
+        <div style="padding: 5px 16px;">
+            <div>
+                <h1 class="white-font" style="font-size: 35px">Most Kills (65)</h1>
+                <div class="name-icon-container">
+                <img src="http://cravatar.eu/helmavatar/b0squet/64.png" class="player-icon">
+                <h1 class="white-font" style="padding-left: 20px;">b0squet (archer)</h1>
+            </div>
+            </div>
+            <hr>
+            <div>
+                <h1 class="white-font" style="font-size: 35px">Most Damage Potions Thrown (87)</h1>
+                <div class="name-icon-container">
+                <img src="http://cravatar.eu/helmavatar/TomD53/64.png" class="player-icon">
+                <h1 class="white-font" style="padding-left: 20px;">TomD53 (chemist)</h1>
+            </div>
+            </div>
+            <hr>
+            <div>
+                <h1 class="white-font" style="font-size: 35px">Most Damage Taken (3800)</h1>
+                <div class="name-icon-container">
+                <img src="http://cravatar.eu/helmavatar/Ninsanity/64.png" class="player-icon">
+                <h1 class="white-font" style="padding-left: 20px;">Ninsanity (medic)</h1>
+            </div>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>
