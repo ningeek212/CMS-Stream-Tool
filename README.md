@@ -21,4 +21,6 @@ A tool for CMS Streamers to be able to collect clips and create a highlight reel
   <li>Pynput</li>
   <li>requests</li>
   <li>PyQt5</li>
+  <li>pandas</li>
+  <li>lxml</li>
 </ul>
