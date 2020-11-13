@@ -3,13 +3,14 @@ app = Flask(__name__)
 
 app.template_folder = "render_templates"
 
+
 @app.route("/")
 def hello_world():
     return "Welcome to the CMS stream tool web server"
 
 
 @app.route('/statscard/')
-def projects():
+def stats_page():
     return "The stats page"
 
 
@@ -22,8 +23,6 @@ class Stat:
 
 
 stats = [Stat("Most Kills", "65", "b0squet", "archer")]
-
-
 
 
 @app.route('/statscard/content/', methods=["GET"])
