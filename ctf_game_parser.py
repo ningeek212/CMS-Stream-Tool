@@ -10,58 +10,55 @@ class CTFGameParser:
 
     # TODO: Do stats stuff
     def compile_stats(self):
-        pass
+        test = CTFGameFinder()
+        test.find_game(self.ctf_server)
 
 
 class CTFGameFinder:
-    def __init__(self):
-        self.control = self.GameSearchControl()
 
     def find_game(self, ctf_server):
-        self.control = self.GameSearchControl()
 
         html = requests.get('https://www.brawl.com/MPS/MPSStatsCTF.php').text
-        parser = self.CTFGameLookupHTMLParser(self.control, ctf_server)
+        parser = self.CTFGameLookupHTMLParser(ctf_server)
         parser.feed(html)
 
-        return self.control.recent_game
+        print(str(parser.get_game()))
 
-    class GameSearchControl:
-        def __init__(self):
+    class CTFGameLookupHTMLParser(HTMLParser):
+        def __init__(self, ctf_server):
+            super().__init__()
             self.recent_game = 0
             self.game = 0
             self.server_search = False
             self.game_found = False
             self.game_search = False
-
-    class CTFGameLookupHTMLParser(HTMLParser):
-        def __init__(self, control, ctf_server):
-            super().__init__()
-            self.control = control
             self.ctf_server = ctf_server
+
+        def get_game(self):
+            return self.game
 
         def error(self, message):
             pass
 
         def handle_starttag(self, tag, attrs):
-            if self.control.game_found:
+            if self.game_found:
                 pass
             elif tag == 'a':
-                self.control.game_search = True
+                self.game_search = True
 
         def handle_endtag(self, tag):
             pass
 
         def handle_data(self, data):
-            if self.control.game_found:
+            if self.game_found:
                 pass
-            elif self.control.game_search:
-                self.control.game = int(data)
-                self.control.game_search = False
-                self.control.server_search = True
-            elif self.control.server_search:
+            elif self.game_search:
+                self.game = int(data)
+                self.game_search = False
+                self.server_search = True
+            elif self.server_search:
                 if data[-4:] == '.com':
                     if data == self.ctf_server:
-                        self.control.recent_game = self.control.game
-                        self.control.game_found = True
-                    self.control.server_search = False
+                        self.recent_game = self.game
+                        self.game_found = True
+                    self.server_search = False
