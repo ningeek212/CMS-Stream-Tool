@@ -40,10 +40,10 @@ while not correct_input:
             answer = input('Please enter \'y\' for yes or \'n\' for no: ')
 
 print('')
-print('Press f5 to add clips to the highlight.  Press f6 to end clip collection for the map.')
+print('Press f6 to end clip collection for the map.')
 print('')
 print('=======================')
-print('Beginning ' + maps[0] + ' clip collection...')
+print('Beginning {0} clip collection...'.format(maps[0]))
 out = cv2.VideoWriter('current_highlights.mp4',
                       cv2.VideoWriter_fourcc('m', 'p', '4', 'v'),
                       60, (1920, 1080), 1)
@@ -96,7 +96,6 @@ def refresh():
 
 def stop():
     global map_number, out, new_highlight, begin_frames, previous_frames
-    start_time = time()
     if not begin_frames:
         print('')
         print('No clips were added... skipping map')
@@ -107,7 +106,8 @@ def stop():
         print('')
         print('Adding last frames...')
         for frame_count in range(60):
-            new_frame = cv2.addWeighted(previous_frames[frame_count], (60 - frame_count) / 60, begin_frames[frame_count],
+            new_frame = cv2.addWeighted(previous_frames[frame_count], (60 - frame_count) / 60,
+                                        begin_frames[frame_count],
                                         frame_count / 60, 0)
             out.write(new_frame)
         new_highlight = True
@@ -133,14 +133,11 @@ def stop():
 
 
 hotkey1 = HotKey(
-    [Key.f5],
-    refresh
-)
-hotkey2 = HotKey(
     [Key.f6],
     stop
 )
-hotkeys = [hotkey1, hotkey2]
+hotkeys = [hotkey1]
+
 
 def signal_press_to_hotkeys(key):
     for hotkey in hotkeys:
@@ -158,7 +155,8 @@ class ReplayChecker:
     def start(self):
         self.thread.start()
 
-    def check_file_finished(self, file_path, samples, interval):
+    @staticmethod
+    def check_file_finished(file_path, samples, interval):
         file_size_list = []
         for x in range(0, samples):
             file_size = getsize(filename=file_path)  # sample the file size of the replay being saved by OBS
@@ -179,9 +177,9 @@ class ReplayChecker:
                     else:
                         sleep(1)
 
+
 replay_checker = ReplayChecker("clips", "replay")
 replay_checker.start()
-
 
 with Listener(on_press=signal_press_to_hotkeys) as l:
     l.join()
