@@ -144,6 +144,7 @@ hotkey2 = HotKey(
 )
 hotkeys = [hotkey1, hotkey2]
 
+
 def signal_press_to_hotkeys(key):
     for hotkey in hotkeys:
         hotkey.press(l.canonical(key))
@@ -160,7 +161,8 @@ class ReplayChecker:
     def start(self):
         self.thread.start()
 
-    def check_file_finished(self, file_path, samples, interval):
+    @staticmethod
+    def check_file_finished(file_path, samples, interval):
         file_size_list = []
         for x in range(0, samples):
             file_size = getsize(filename=file_path)  # sample the file size of the replay being saved by OBS
@@ -181,9 +183,9 @@ class ReplayChecker:
                     else:
                         sleep(1)
 
+
 replay_checker = ReplayChecker("clips", "replay")
 replay_checker.start()
-
 
 with Listener(on_press=signal_press_to_hotkeys) as l:
     l.join()
