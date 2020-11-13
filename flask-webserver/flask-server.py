@@ -1,6 +1,4 @@
 from flask import Flask, render_template
-import websockets
-import asyncio
 app = Flask(__name__)
 
 app.template_folder = "render_templates"
@@ -26,7 +24,6 @@ class Stat:
 stats = [Stat("Most Kills", "65", "b0squet", "archer")]
 
 
-url = "ws://localhost:5001"
 
 
 @app.route('/statscard/content/', methods=["GET"])
