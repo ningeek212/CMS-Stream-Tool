@@ -3,16 +3,58 @@
 <head>
     <meta charset="UTF-8">
     <title>CMS Stream Tool - Info Card</title>
-    <link rel="stylesheet" href="../assets/fonts/fonts.css">
-    <script src="../assets/jquery-3.5.1.js"></script>
+    <link rel="stylesheet" href="{{url_for('static', filename='assets/fonts/fonts.css')}}">
+    <script src="{{url_for('static', filename='assets/jquery-3.5.1.js')}}"></script>
+
+    <link rel="shortcut icon" href="{{ url_for('static', filename='favicon.ico') }}">
 </head>
 <script>
 $(document).ready(function(){
     $("#stats-container").hide();
     $(".card").hide();
+
+    function showAndHideCard(){
+        showCard(setTimeout(function(){
+            hideCard(setTimeout(showAndHideCard, 5000));
+        }, 5000));
+    };
+
+    function showCard(){
+    console.log("showing card");
     $(".card").fadeIn(2000, function(){
-$("#stats-container").slideDown(1000);
-    });
+        $("#stats-container").slideDown(1000);
+    })
+    };
+
+    function hideCard(){
+    console.log("hiding card");
+    $("#stats-container").slideUp(1000, function(){
+        $(".card").fadeOut(2000);
+    })
+    };
+
+    var currentState = "hidden";
+
+    function checkStatus(){
+        $.get("/overlay_status", function(data, status){
+            var status = data["stats_card"]["status"]
+            console.log(status);
+
+            if (status == "hidden" && status != currentState) {
+                hideCard();
+                currentState = "hidden";
+            } else if (status == "showing" && status != currentState) {
+                $("#stats-container").load("/statscard/content");
+                showCard();
+                currentState = "showing";
+            } else {
+                console.log("doing nothing");
+            }
+
+        });
+    };
+
+    setInterval(checkStatus, 500);
 
 
 });
@@ -59,7 +101,7 @@ $("#stats-container").slideDown(1000);
 
 
 <div class="card">
-    <img src="../images/cms_stats.png" style="width:100%; border-radius: 20px 20px 0 0;" id="cms-image">
+    <img src="{{url_for('static', filename='images/cms_stats.png')}}" style="width:100%; border-radius: 20px 20px 0 0;" id="cms-image">
     <div class="container" id="stats-container">
 
     </div>

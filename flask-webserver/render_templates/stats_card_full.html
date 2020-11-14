@@ -10,9 +10,28 @@
 $(document).ready(function(){
     $("#stats-container").hide();
     $(".card").hide();
+
+    function showAndHideCard(){
+        showCard(setTimeout(function(){
+            hideCard(setTimeout(showAndHideCard, 5000));
+        }, 5000));
+    };
+
+    function showCard(){
+    console.log("showing card");
     $(".card").fadeIn(2000, function(){
-$("#stats-container").slideDown(1000);
-    });
+        $("#stats-container").slideDown(1000);
+    })
+    };
+
+    function hideCard(){
+    console.log("hiding card");
+    $("#stats-container").slideUp(1000, function(){
+        $(".card").fadeOut(2000);
+    })
+    };
+
+    showAndHideCard();
 
 
 });
