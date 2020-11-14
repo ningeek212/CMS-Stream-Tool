@@ -2,14 +2,24 @@ from html.parser import HTMLParser
 import requests
 import re
 import pandas.io.html as html
+from pandas import DataFrame
 
+
+# Stat table column names:
+# name | kit_type | playtime | kills | deaths | damage_dealt | damage_received | hp_restored | sponge_launches
+# fire_extinguished | players_teleported | mobs_spawned | fire_axes | flash_bombs | assassination_attempts | headshots
+# best_ks | flags_recovered | flags_stolen | flags_dropped | flags_captured | time_with_flag
+
+# Stat table kit names
+# ARCHER | ASSASSIN | CHEMIST | DWARF | ELF | ENGINEER | HEAVY | MAGE | MEDIC | NECRO | NINJA | PYRO | SCOUT
+# SOLDIER | FASHIONISTA
 
 class CTFGameParser:
     def __init__(self, ctf_server):
         self.ctf_server = ctf_server
         self.game = 0
-        self.stat_table = []
-        self.kit_table = []
+        self.stat_table = DataFrame()
+        self.kit_table = DataFrame()
 
     def process_stats(self):
         # Load and find most recent game on ctf_server
@@ -29,6 +39,26 @@ class CTFGameParser:
         kit_table_html = table_loc[7] + table_loc[9] + table_loc[11]
         self.stat_table = html.read_html(stat_table_html)[0]
         self.kit_table = html.read_html(kit_table_html)[0]
+
+    def get_stats(self, stat_name, n=1):
+        if not self.stat_table.empty:
+            lower_stat_name = stat_name.lower()
+            stats = self.stat_table.nlargest(n, lower_stat_name, 'all')  # Get largest n stats
+            records = stats[['name', lower_stat_name]].to_records(index=False)  # Get IGN and stat from data frame
+            return list(records)  # Convert dataframe to list of tuples
+        else:
+            return []
+
+    def get_kit_stats(self, stat_name, kit_name, n=1):
+        if not self.kit_table.empty:
+            lower_stat_name = stat_name.lower()
+            upper_kit_name = kit_name.upper()
+            kit_stats = self.kit_table.loc[self.kit_table['kit_type'] == upper_kit_name]  # Get kit_name stats
+            stats = kit_stats.nlargest(n, lower_stat_name, 'all')  # Get largest n stats
+            records = stats[['name', lower_stat_name]].to_records(index=False)  # Get IGN and stat from data frame
+            return list(records)  # Convert dataframe to list of tuples
+        else:
+            return []
 
     class CTFGameLookupHTMLParser(HTMLParser):
         def __init__(self, ctf_server):
@@ -71,7 +101,3 @@ class CTFGameParser:
                         self.recent_game = self.game
                         self.game_found = True
                     self.server_search = False
-
-
-test = CTFGameParser('1.ctfmatch.brawl.com')
-test.process_stats()
