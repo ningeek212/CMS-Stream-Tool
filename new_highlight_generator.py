@@ -12,8 +12,8 @@ LATEST_INSTANT_REPLAY_FILENAME = "latest_replay.mp4"
 CURRENT_INSTANT_REPLAY_FILENAME = "current_replay.mp4"
 LATEST_HIGHLIGHT_REEL_FILENAME = "latest_highlights.mp4"
 CURRENT_HIGHLIGHT_REEL_FILENAME = "highlight_reel.mp4"
-VIDEO_HEIGHT = 1080
 VIDEO_WIDTH = 1920
+VIDEO_HEIGHT = 1080
 VIDEO_FPS = 60
 teams = ['1', '2']
 maps = ['a', 'b', 'c']
@@ -164,8 +164,10 @@ def stop():
         out.release()
         copyfile(LATEST_HIGHLIGHT_REEL_FILENAME, 'highlights/{} vs {} {}.mp4'.format(teams[0], teams[1], maps[map_number]))
         copyfile(LATEST_HIGHLIGHT_REEL_FILENAME, CURRENT_HIGHLIGHT_REEL_FILENAME)
+
     map_number += 1
     cv2.destroyAllWindows()
+
     if map_number >= num_maps:
         input('Goodbye :)')
         replay_checker.checking = False  # stop checking for replays (thread will stop as a result)
