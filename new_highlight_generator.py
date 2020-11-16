@@ -56,16 +56,118 @@ print('Press f5 to save clip for instant replay.  Press f6 to end clip collectio
 print('')
 print('=======================')
 print('Beginning ' + maps[0] + ' clip collection...')
-out = cv2.VideoWriter(LATEST_HIGHLIGHT_REEL_FILENAME, cv2.VideoWriter_fourcc('m', 'p', '4', 'v'),
-                      VIDEO_FPS, (VIDEO_WIDTH, VIDEO_HEIGHT), 1)
 map_number = 0
 new_highlight = True
 begin_frames = []
 previous_frames = []
 
 
+class HighlightGenerator:
+    def __init__(self):
+        self.out = cv2.VideoWriter(LATEST_HIGHLIGHT_REEL_FILENAME,
+                                   cv2.VideoWriter_fourcc('m', 'p', '4', 'v'),
+                                   VIDEO_FPS, (VIDEO_WIDTH, VIDEO_HEIGHT), 1)
+        self.map_number = 0
+        self.new_highlight = True
+        self.begin_frames = []
+        self.previous_frames = []
+        self.processing_clip = False
+        self.processing_high = False
+        pass
+
+    def refresh(self, file_path):
+        if self.processing_high:
+            pass
+        self.processing_clip = True
+        cap = cv2.VideoCapture(file_path)
+        total_frames = int(cap.get(cv2.CAP_PROP_FRAME_COUNT))
+        frame_count = 0
+        start_time = time()
+        print('')
+        print('Adding {0}'.format(file_path))
+        end_frames = []
+
+        while cap.isOpened():
+            ret, frame = cap.read()
+            if not ret:
+                cap.release()
+                break
+            # If this clip is the first of a new highlight, store the first second of the clip.
+            elif frame_count < VIDEO_FPS and self.new_highlight:
+                self.begin_frames.append(frame)
+            # Add fade transition effect between the previous clip and current clip
+            elif frame_count < VIDEO_FPS:
+                new_frame = cv2.addWeighted(self.previous_frames[frame_count], (VIDEO_FPS - frame_count) / VIDEO_FPS,
+                                            frame, frame_count / VIDEO_FPS, 0)
+                self.out.write(new_frame)
+            # Store the last second of the clip
+            elif total_frames - frame_count <= VIDEO_FPS + 1:
+                end_frames.append(frame)
+            else:
+                self.out.write(frame)
+
+            frame_count += 1
+            if frame_count % 10 == 0:
+                print('{:2.2f}% done, {:2.2f}s'.format(100 * frame_count / total_frames, time() - start_time), end='\r')
+            if cv2.waitKey(1) & 0xFF == ord('q'):
+                break
+        print('End of clip, time elapsed: ' + str(time() - start_time))
+        self.previous_frames = end_frames
+        self.new_highlight = False
+        new_file_path = 'old_clips/{0}'.format(file_path[6:])
+        move(file_path, new_file_path)
+        self.processing_clip = False
+
+    def stop(self):
+        if self.processing_clip:
+            print('')
+            print('Still processing a clip')
+            pass
+        elif not self.begin_frames:
+            self.processing_high = True
+            print('')
+            print('No clips were added... skipping map')
+            print('Ending ' + maps[self.map_number] + ' clip collection')
+            print('=======================')
+            self.out.release()
+        else:
+            self.processing_high = True
+            print('')
+            print('Adding last frames...')
+            for frame_count in range(VIDEO_FPS):
+                new_frame = cv2.addWeighted(self.previous_frames[frame_count], (VIDEO_FPS - frame_count) / VIDEO_FPS,
+                                            self.begin_frames[frame_count], frame_count / VIDEO_FPS, 0)
+                self.out.write(new_frame)
+            self.new_highlight = True
+            self.begin_frames = []
+            self.previous_frames = []
+            print('Ending ' + maps[self.map_number] + ' clip collection')
+            print('=======================')
+            self.out.release()
+            copyfile(LATEST_HIGHLIGHT_REEL_FILENAME,
+                     'highlights/{} vs {} {}.mp4'.format(teams[0], teams[1], maps[self.map_number]))
+            copyfile(LATEST_HIGHLIGHT_REEL_FILENAME, CURRENT_HIGHLIGHT_REEL_FILENAME)
+
+        self.processing_high = False
+        self.map_number += 1
+        cv2.destroyAllWindows()
+
+        if self.map_number >= num_maps:
+            input('Goodbye :)')
+            replay_checker.checking = False  # stop checking for replays (thread will stop as a result)
+            sys.exit()
+        else:
+            self.out = cv2.VideoWriter(LATEST_HIGHLIGHT_REEL_FILENAME,
+                                       cv2.VideoWriter_fourcc('m', 'p', '4', 'v'),
+                                       VIDEO_FPS, (VIDEO_WIDTH, VIDEO_HEIGHT), 1)
+            print('')
+            print('=======================')
+            print('Beginning ' + maps[self.map_number] + ' clip collection')
+
+
 class ReplayChecker:
-    def __init__(self, folder, keyword, latest_clip_path):
+    def __init__(self, hg, folder, keyword, latest_clip_path):
+        self.highlight_generator = hg
         self.obs_output_folder = folder
         self.keyword = keyword
         self.thread = Thread(target=self.check_loop, daemon=True)
@@ -94,91 +196,9 @@ class ReplayChecker:
                     if self.check_file_finished(file_path, 10, 0.1):
                         print("File complete")
                         copyfile(file_path, self.latest_clip_path)  # for instant replay
-                        refresh(file_path)
+                        self.highlight_generator.refresh(file_path)
                     else:
                         sleep(1)
-
-
-def refresh(file_path):
-    global map_number, new_highlight, begin_frames, previous_frames
-
-    cap = cv2.VideoCapture(file_path)
-    total_frames = int(cap.get(cv2.CAP_PROP_FRAME_COUNT))
-    frame_count = 0
-    start_time = time()
-    print('')
-    print('Adding {0}'.format(file_path))
-    end_frames = []
-
-    while cap.isOpened():
-        ret, frame = cap.read()
-        if not ret:
-            cap.release()
-            break
-        # If this clip is the first of a new highlight, store the first second of the clip.
-        elif frame_count < VIDEO_FPS and new_highlight:
-            begin_frames.append(frame)
-        # Add fade transition effect between the previous clip and current clip
-        elif frame_count < VIDEO_FPS:
-            new_frame = cv2.addWeighted(previous_frames[frame_count], (VIDEO_FPS - frame_count) / VIDEO_FPS, frame,
-                                        frame_count / VIDEO_FPS, 0)
-            out.write(new_frame)
-        # Store the last second of the clip
-        elif total_frames - frame_count <= VIDEO_FPS + 1:
-            end_frames.append(frame)
-        else:
-            out.write(frame)
-
-        frame_count += 1
-        if frame_count % 10 == 0:
-            print('{:2.2f}% done, {:2.2f}s'.format(100 * frame_count / total_frames, time() - start_time), end='\r')
-        if cv2.waitKey(1) & 0xFF == ord('q'):
-            break
-    print('End of clip, time elapsed: ' + str(time() - start_time))
-    previous_frames = end_frames
-    new_highlight = False
-    new_file_path = 'old_clips/{0}'.format(file_path[6:])
-    move(file_path, new_file_path)
-
-
-def stop():
-    global map_number, out, new_highlight, begin_frames, previous_frames
-    if not begin_frames:
-        print('')
-        print('No clips were added... skipping map')
-        print('Ending ' + maps[map_number] + ' clip collection')
-        print('=======================')
-        out.release()
-    else:
-        print('')
-        print('Adding last frames...')
-        for frame_count in range(VIDEO_FPS):
-            new_frame = cv2.addWeighted(previous_frames[frame_count], (VIDEO_FPS - frame_count) / VIDEO_FPS,
-                                        begin_frames[frame_count], frame_count / VIDEO_FPS, 0)
-            out.write(new_frame)
-        new_highlight = True
-        begin_frames = []
-        previous_frames = []
-        print('Ending ' + maps[map_number] + ' clip collection')
-        print('=======================')
-        out.release()
-        copyfile(LATEST_HIGHLIGHT_REEL_FILENAME, 'highlights/{} vs {} {}.mp4'.format(teams[0], teams[1], maps[map_number]))
-        copyfile(LATEST_HIGHLIGHT_REEL_FILENAME, CURRENT_HIGHLIGHT_REEL_FILENAME)
-
-    map_number += 1
-    cv2.destroyAllWindows()
-
-    if map_number >= num_maps:
-        input('Goodbye :)')
-        replay_checker.checking = False  # stop checking for replays (thread will stop as a result)
-        sys.exit()
-    else:
-        out = cv2.VideoWriter(LATEST_HIGHLIGHT_REEL_FILENAME,
-                              cv2.VideoWriter_fourcc('m', 'p', '4', 'v'),
-                              VIDEO_FPS, (VIDEO_WIDTH, VIDEO_HEIGHT), 1)
-        print('')
-        print('=======================')
-        print('Beginning ' + maps[map_number] + ' clip collection')
 
 
 def update_instant_replay():
@@ -187,7 +207,9 @@ def update_instant_replay():
     print("Finished copying")
 
 
-stop_hotkey = HotKey([Key.f6], stop)
+highlight_generator = HighlightGenerator()
+
+stop_hotkey = HotKey([Key.f6], highlight_generator.stop)
 
 instant_replay_hotkey = HotKey([Key.f5], update_instant_replay)
 
@@ -200,7 +222,7 @@ def signal_press_to_hotkeys(key):
         hotkey.release(l.canonical(key))
 
 
-replay_checker = ReplayChecker("clips", "replay", LATEST_INSTANT_REPLAY_FILENAME)
+replay_checker = ReplayChecker(highlight_generator, "clips", "replay", LATEST_INSTANT_REPLAY_FILENAME)
 replay_checker.start()
 
 with Listener(on_press=signal_press_to_hotkeys) as l:
