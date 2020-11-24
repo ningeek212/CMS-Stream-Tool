@@ -17,8 +17,8 @@ class Stat:
         self.kit = kit
 
 
-stats = [Stat("Most Kills", "65", "Recovs", "ninja"),
-         Stat("Most Steals", "16", "TheSpartan33", "soldier")]
+stats = [Stat("Most Kills", "65", "Recovs", "(ninja)"),
+         Stat("Most Steals", "16", "TheSpartan33", "(soldier)")]
 
 
 @app.route("/")
@@ -48,6 +48,14 @@ def toggle_stats_card():
         print("Showing stats card")
 
 
+def hide_stats_card():
+    overlay_status_dict["stats_card"]["status"] = 0
+
+
+def show_stats_card():
+    overlay_status_dict["stats_card"]["status"] = 1
+
+
 @app.route("/overlay_status", methods=["GET"])
 def get_overlay_status():
     return jsonify(overlay_status_dict)
@@ -71,14 +79,6 @@ def start_server():
     print("Started Flask Server")
 
 
-start_server()
-
-
-while True:
-    sleep(10)
-    toggle_stats_card()
-    print(overlay_status_dict)
-    
 
 
 

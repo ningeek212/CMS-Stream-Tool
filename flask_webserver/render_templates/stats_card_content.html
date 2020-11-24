@@ -13,7 +13,7 @@ JQuery will insert this HTML into the container and then animate the card
         <h1 class="white-font" style="font-size: 35px">{{ stat.title}} ({{ stat.value }})</h1>
         <div class="name-icon-container">
             <img src="http://cravatar.eu/helmavatar/{{ stat.username }}/64.png" class="player-icon">
-            <h1 class="white-font" style="padding-left: 20px;">{{ stat.username }} ({{ stat.kit }})</h1>
+            <h1 class="white-font" style="padding-left: 20px;">{{ stat.username }} {{ stat.kit }}</h1>
         </div>
     </div>
     {% endfor %}
