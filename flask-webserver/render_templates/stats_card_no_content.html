@@ -21,7 +21,7 @@ $(document).ready(function(){
 
     function showCard(){
     console.log("showing card");
-    $(".card").fadeIn(2000, function(){
+    $(".card").slideDown(1000, function(){
         $("#stats-container").slideDown(1000);
     })
     };
@@ -29,24 +29,23 @@ $(document).ready(function(){
     function hideCard(){
     console.log("hiding card");
     $("#stats-container").slideUp(1000, function(){
-        $(".card").fadeOut(2000);
+        $(".card").slideUp(1000);
     })
     };
 
-    var currentState = "hidden";
+    var currentState = 0;
 
     function checkStatus(){
         $.get("/overlay_status", function(data, status){
             var status = data["stats_card"]["status"]
-            console.log(status);
-
-            if (status == "hidden" && status != currentState) {
+            console.log("current status " + status);
+            if (status == 0 && status != currentState) {
                 hideCard();
-                currentState = "hidden";
-            } else if (status == "showing" && status != currentState) {
+                currentState = 0;
+            } else if (status == 1 && status != currentState) {
                 $("#stats-container").load("/statscard/content");
                 showCard();
-                currentState = "showing";
+                currentState = 1;
             } else {
                 console.log("doing nothing");
             }

@@ -1,5 +1,7 @@
 from flask import Flask, render_template, jsonify
 from gevent.pywsgi import WSGIServer
+from threading import Thread
+from time import sleep
 
 app = Flask(__name__)
 
@@ -15,14 +17,13 @@ class Stat:
         self.kit = kit
 
 
-stats = [Stat("Most Kills", "65", "b0squet", "archer"),
-         Stat("Most Deaths", "40", "TomD53", "medic")]
+stats = [Stat("Most Kills", "65", "Recovs", "ninja"),
+         Stat("Most Steals", "16", "TheSpartan33", "soldier")]
 
 
 @app.route("/")
-def hello_world():
+def home():
     return "Welcome to the CMS stream tool web server"
-
 
 
 @app.route("/statscard/")
@@ -32,19 +33,19 @@ def stats_page():
 
 overlay_status_dict = {
     "stats_card": {
-        "status": "hidden"  # can be "hidden" or "showing"
+        "status": 1,  # can be 0 = "hidden" or 1 = "showing"
+        "map_info": "Map 3 - Castle Caverns"
     }
 }
 
 
 def toggle_stats_card():
-    if overlay_status_dict["stats_card"]["status"] == "showing":
-        overlay_status_dict["stats_card"]["status"] = "hidden"
+    if overlay_status_dict["stats_card"]["status"] == 1:
+        overlay_status_dict["stats_card"]["status"] = 0
         print("Hiding stats card")
-    elif overlay_status_dict["stats_card"]["status"] == "hidden":
-        overlay_status_dict["stats_card"]["status"] = "showing"
+    elif overlay_status_dict["stats_card"]["status"] == 0:
+        overlay_status_dict["stats_card"]["status"] = 1
         print("Showing stats card")
-
 
 
 @app.route("/overlay_status", methods=["GET"])
@@ -54,26 +55,29 @@ def get_overlay_status():
 
 @app.route('/statscard/content/', methods=["GET"])
 def stats_content():
-    return render_template("stats_card_content.html", stats_for_card=stats, map_info="Map 1 - Adrenaline I")
+    return render_template("stats_card_content.html", stats_for_card=stats,
+                           map_info=overlay_status_dict["stats_card"]["map_info"])
 
 
-
-
-if __name__ == '__main__':
-    # Debug/Development
-    #app.run(host="localhost", port=5000, debug=False)
-
-    # Production
+def start_server_thread():
     http_server = WSGIServer(('', 5000), app, log=None)
     http_server.serve_forever()
 
-    import logging
 
-    log = logging.getLogger('werkzeug')
-    log.setLevel(logging.ERROR)
+def start_server():
+    server_thread = Thread(target=start_server_thread)
+    server_thread.start()
+
+    print("Started Flask Server")
 
 
+start_server()
 
+
+while True:
+    sleep(10)
+    toggle_stats_card()
+    print(overlay_status_dict)
     
 
 
