@@ -20,6 +20,7 @@ class CTFGameParser:
         self.game = 0
         self.stat_table = DataFrame()
         self.kit_table = DataFrame()
+        self.player_kits = dict()
 
     def process_stats(self):
         # Load and find most recent game on ctf_server
@@ -40,12 +41,19 @@ class CTFGameParser:
         self.stat_table = html.read_html(stat_table_html)[0]
         self.kit_table = html.read_html(kit_table_html)[0]
 
+        self.set_player_kits()
+
     def get_stats(self, stat_name, n=1):
         if not self.stat_table.empty:
             lower_stat_name = stat_name.lower()
             stats = self.stat_table.nlargest(n, lower_stat_name, 'all')  # Get largest n stats
             records = stats[['name', lower_stat_name]].to_records(index=False)  # Get IGN and stat from data frame
-            return list(records)  # Convert dataframe to list of tuples
+            test = list(records)  # Convert dataframe to list of tuples
+            ret_val = []
+            for player in test:
+                player_name = player[0]
+                ret_val.append((player_name, player[1], self.get_player_kit(player_name)))
+            return ret_val
         else:
             return []
 
@@ -59,6 +67,26 @@ class CTFGameParser:
             return list(records)  # Convert dataframe to list of tuples
         else:
             return []
+
+    def get_player_kit(self, player_name):
+        if not self.kit_table.empty:
+            return self.player_kits[player_name]
+
+    def get_player_stats(self, stat_name, player_name):
+        if not self.kit_table.empty:
+            lower_stat_name = stat_name.lower()
+            return self.stat_table.loc[self.stat_table['name'] == player_name, ['name', lower_stat_name]].to_records(
+                index=False)
+        else:
+            return []
+
+    def set_player_kits(self):
+        if not self.kit_table.empty:
+            for index, row in self.stat_table.iterrows():
+                player_name = row['name']
+                kits = self.kit_table.loc[self.kit_table['name'] == player_name, ['kit_type', 'playtime']]
+                player_kit = kits.nlargest(1, 'playtime').to_records(index=False)
+                self.player_kits[player_name] = player_kit[0][0]
 
     class CTFGameLookupHTMLParser(HTMLParser):
         def __init__(self, ctf_server):
