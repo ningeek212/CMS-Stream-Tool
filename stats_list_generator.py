@@ -13,7 +13,7 @@ stats_parser = ctf_game_parser.CTFGameParser(input("Enter the match server IP: "
 def top_damage_comparison():
     fs.stats = []
     for stat in stats_parser.get_stats("damage_dealt", 2):
-        fs.stats.append(fs.Stat("Damage Dealt", stat[1], stat[0], ""))
+        fs.stats.append(fs.Stat("Damage Dealt", stat[1], stat[0], "({0})".format(stat[2])))
     fs.overlay_status_dict["stats_card"]["map_info"] = "Top Damage Comparison"
     fs.show_stats_card()
 
@@ -23,9 +23,9 @@ def headshots_kills_killstreak():
     headshots = stats_parser.get_stats("headshots")[0]
     kills = stats_parser.get_stats("kills")[0]
     killstreak = stats_parser.get_stats("best_ks")[0]
-    fs.stats.append(fs.Stat("Most Headshots", headshots[1], headshots[0], ""))
-    fs.stats.append(fs.Stat("Most Kills", kills[1], kills[0], ""))
-    fs.stats.append(fs.Stat("Highest Killstreak", killstreak[1], killstreak[0], ""))
+    fs.stats.append(fs.Stat("Most Headshots", headshots[1], headshots[0], "({0})".format(headshots[2])))
+    fs.stats.append(fs.Stat("Most Kills", kills[1], kills[0], "({0})".format(kills[2])))
+    fs.stats.append(fs.Stat("Highest Killstreak", killstreak[1], killstreak[0], "({0})".format(killstreak[2])))
     fs.overlay_status_dict["stats_card"]["map_info"] = "Map Info Goes Here"
 
 
@@ -48,9 +48,9 @@ def offense_statistics():
     captured = stats_parser.get_stats("flags_captured")[0]
     stolen = stats_parser.get_stats("flags_stolen")[0]
     flag_time = stats_parser.get_stats("time_with_flag")[0]
-    fs.stats.append(fs.Stat("Most Flags Captured", captured[1], captured[0], ""))
-    fs.stats.append(fs.Stat("Most Flags Stolen", stolen[1], stolen[0], ""))
-    fs.stats.append(fs.Stat("Most time with Flag", flag_time[1], flag_time[0], ""))
+    fs.stats.append(fs.Stat("Most Flags Captured", captured[1], captured[0], "({0})".format(captured[2])))
+    fs.stats.append(fs.Stat("Most Flags Stolen", stolen[1], stolen[0], "({0})".format(stolen[2])))
+    fs.stats.append(fs.Stat("Most time with Flag", flag_time[1], flag_time[0], "({0})".format(flag_time[2])))
     fs.overlay_status_dict["stats_card"]["map_info"] = "Offense Statistics"
 
 
