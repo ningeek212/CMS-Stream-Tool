@@ -5,10 +5,9 @@ from time import sleep
 fs.start_server()
 fs.overlay_status_dict["stats_card"]["status"] = 0
 
-sleep(2)
+# sleep(2)
 
-stats_parser = ctf_game_parser.CTFGameParser("2.mcctf.com")
-stats_parser.process_stats()
+stats_parser = ctf_game_parser.CTFGameParser(input("Enter the match server IP: "))
 
 
 def top_damage_comparison():
@@ -40,7 +39,7 @@ def archer_headshots_comparison():
 def archer_damage_taken_comparison():
     fs.stats = []
     for stat in stats_parser.get_kit_stats("damage_received", "archer", 2):
-        fs.stats.append(fs.Stat("Damage Recieved", stat[1].round(1), stat[0], "(Archer)"))
+        fs.stats.append(fs.Stat("Damage Received", stat[1].round(1), stat[0], "(Archer)"))
     fs.overlay_status_dict["stats_card"]["map_info"] = "Archer Comparison"
 
 
@@ -58,7 +57,7 @@ def offense_statistics():
 def medic_pressure():
     fs.stats = []
     for stat in stats_parser.get_kit_stats("damage_received", "medic", 2):
-        fs.stats.append(fs.Stat("Damage Recieved", stat[1].round(1), stat[0], "(Medic)"))
+        fs.stats.append(fs.Stat("Damage Received", stat[1].round(1), stat[0], "(Medic)"))
     fs.overlay_status_dict["stats_card"]["map_info"] = "Medic Pressure"
 
 
@@ -89,12 +88,33 @@ card_list = [top_damage_comparison, headshots_kills_killstreak, archer_headshots
              archer_damage_taken_comparison, offense_statistics, medic_pressure, pyro_damage_dealt,
              pyro_damage_received, assassin_comparison]
 
-while True:
+cards_list = [
+    [top_damage_comparison, "Shows the top two damage dealers in the last game"],
+    [headshots_kills_killstreak, "Shows the player with the most headshots, the most kills, "
+                                 "and the highest killstreak"],
+    [archer_headshots_comparison, "Compares the amount of headshots of the top 2 archers"],
+    [archer_damage_taken_comparison, "Compares the amount of damage taken by the archers"],
+    [offense_statistics, "Shows the players with the most captures, steals and time with flag"],
+    [medic_pressure, "Compares the amount of damage taken"],
+    [pyro_damage_dealt, "Compares the amount of damage done by the two pyros"],
+    [pyro_damage_received, "Compares the amount of damage received by the two pyros"],
+    [assassin_comparison, "Shows the assassin players with the most kills and recoveries"]
+]
+
+
+def select_card_to_display():
+    stats_parser.process_stats()
+    print("=========")
+    print("Please select which card you would like to display from the list below")
+    count = 1
+    for card in cards_list:
+        print("[{}] \033[94m{}\033[0m - {}".format(count, card[0].__name__, card[1]))
+        count += 1
+    response = int(input("Please make your selection: "))-1
+    print("You have chosen \033[94m{} - {}\033[0m".format(cards_list[response][0].__name__, cards_list[response][1]))
+    print("Displaying card for 20 seconds")
+    cards_list[response][0]()
+    fs.show_stats_card()
+    sleep(20)
+    print("Hiding card")
     fs.hide_stats_card()
-    sleep(2)
-    for card in card_list:
-        card()
-        fs.show_stats_card()
-        sleep(5)
-        fs.hide_stats_card()
-        sleep(5)

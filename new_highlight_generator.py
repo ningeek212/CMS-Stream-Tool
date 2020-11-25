@@ -6,6 +6,7 @@ from os.path import getsize
 from shutil import copyfile, move
 from time import sleep, time
 from threading import Thread
+import stats_list_generator
 
 # TODO: Define these constants using a GUI
 LATEST_INSTANT_REPLAY_FILENAME = "latest_replay.mp4"
@@ -14,9 +15,9 @@ LATEST_HIGHLIGHT_REEL_FILENAME = "latest_highlights.mp4"
 CURRENT_HIGHLIGHT_REEL_FILENAME = "highlight_reel.mp4"
 VIDEO_WIDTH = 1920
 VIDEO_HEIGHT = 1080
-VIDEO_FPS = 60
-teams = ['1', '2']
-maps = ['a', 'b', 'c']
+VIDEO_FPS = 30
+teams = ['team a', 'team b']
+maps = ['Lowrise', 'Desert Strike', 'Castle Caverns']
 num_maps = 3
 
 # # Get team names, map names, and file locations from user
@@ -213,7 +214,9 @@ stop_hotkey = HotKey([Key.f6], highlight_generator.stop)
 
 instant_replay_hotkey = HotKey([Key.f5], update_instant_replay)
 
-hotkeys = [stop_hotkey, instant_replay_hotkey]
+stats_card_hotkey = HotKey([Key.f4], stats_list_generator.select_card_to_display)
+
+hotkeys = [stop_hotkey, instant_replay_hotkey, stats_card_hotkey]
 
 
 def signal_press_to_hotkeys(key):
