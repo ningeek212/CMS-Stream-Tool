@@ -7,12 +7,14 @@ from shutil import copyfile, move
 from time import sleep, time
 from threading import Thread
 import stats_list_generator
+from flask_webserver.flask_server import title_screen_dict
 
 # TODO: Define these constants using a GUI
 LATEST_INSTANT_REPLAY_FILENAME = "latest_replay.mp4"
 CURRENT_INSTANT_REPLAY_FILENAME = "current_replay.mp4"
 LATEST_HIGHLIGHT_REEL_FILENAME = "latest_highlights.mp4"
 CURRENT_HIGHLIGHT_REEL_FILENAME = "highlight_reel.mp4"
+MAP_MESSAGES = ["First Map", "Second Map", "Third Map"]
 VIDEO_WIDTH = 1920
 VIDEO_HEIGHT = 1080
 VIDEO_FPS = 30
@@ -57,10 +59,22 @@ print('Press f5 to save clip for instant replay.  Press f6 to end clip collectio
 print('')
 print('=======================')
 print('Beginning ' + maps[0] + ' clip collection...')
+
 map_number = 0
 new_highlight = True
 begin_frames = []
 previous_frames = []
+
+
+def update_title_screen(map_index):
+    title_screen_dict["medium_text"] = maps[map_index]
+    title_screen_dict["large_text"] = MAP_MESSAGES[map_index]
+    title_screen_dict["small_text_1"] = "{} vs {}".format(teams[0], teams[1])
+    title_screen_dict["small_text_2"] = "Map starting soon"
+    print(title_screen_dict)
+
+
+update_title_screen(0)
 
 
 class HighlightGenerator:
@@ -164,6 +178,7 @@ class HighlightGenerator:
             print('')
             print('=======================')
             print('Beginning ' + maps[self.map_number] + ' clip collection')
+            update_title_screen(self.map_number)
 
 
 class ReplayChecker:

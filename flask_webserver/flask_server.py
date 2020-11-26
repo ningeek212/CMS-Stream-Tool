@@ -1,4 +1,4 @@
-from flask import Flask, render_template, jsonify
+from flask import Flask, render_template, request, jsonify
 from gevent.pywsgi import WSGIServer
 from threading import Thread
 from time import sleep
@@ -67,9 +67,27 @@ def stats_content():
                            map_info=overlay_status_dict["stats_card"]["map_info"])
 
 
-@app.route("/title_screen", methods=["GET"])
+title_screen_dict = {
+    "large_text": "First Map",
+    "medium_text": "Lowrise",
+    "small_text_1": "FT vs TB",
+    "small_text_2": "Stream starting soon"
+}
+
+
+@app.route("/title_screen/", methods=["GET"])
 def title_screen():
-    return render_template("title_screen/title.html")
+    if request.args.get("video") == "true":
+        # http://localhost:5000/title_screen/?video=true
+        # displays the video located in static/video.mp4 in the background
+        return render_template("title_screen/title_with_video.html")
+    else:
+        return render_template("title_screen/title.html")
+
+
+@app.route("/title_screen/data/", methods=["GET"])
+def title_screen_data_api():
+    return jsonify(title_screen_dict)
 
 
 def start_server_thread():
