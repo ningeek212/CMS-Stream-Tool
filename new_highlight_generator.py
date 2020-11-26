@@ -8,6 +8,8 @@ from time import sleep, time
 from threading import Thread
 import stats_list_generator
 from flask_webserver.flask_server import title_screen_dict
+import obs_websocket_methods
+
 
 # TODO: Define these constants using a GUI
 LATEST_INSTANT_REPLAY_FILENAME = "latest_replay.mp4"
@@ -71,7 +73,7 @@ def update_title_screen(map_index):
     title_screen_dict["large_text"] = MAP_MESSAGES[map_index]
     title_screen_dict["small_text_1"] = "{} vs {}".format(teams[0], teams[1])
     title_screen_dict["small_text_2"] = "Map starting soon"
-    print(title_screen_dict)
+    obs_websocket_methods.set_map_cinematic(map_index + 1)
 
 
 update_title_screen(0)
@@ -170,6 +172,7 @@ class HighlightGenerator:
         if self.map_number >= num_maps:
             input('Goodbye :)')
             replay_checker.checking = False  # stop checking for replays (thread will stop as a result)
+            obs_websocket_methods.disconnect()
             sys.exit()
         else:
             self.out = cv2.VideoWriter(LATEST_HIGHLIGHT_REEL_FILENAME,

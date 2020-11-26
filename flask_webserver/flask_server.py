@@ -68,10 +68,10 @@ def stats_content():
 
 
 title_screen_dict = {
-    "large_text": "First Map",
-    "medium_text": "Lowrise",
-    "small_text_1": "FT vs TB",
-    "small_text_2": "Stream starting soon"
+    "large_text": "Large Text",
+    "medium_text": "Medium Text",
+    "small_text_1": "Small Text One",
+    "small_text_2": "Small Text Two"
 }
 
 
