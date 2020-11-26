@@ -25,4 +25,11 @@ A tool for CMS Streamers to be able to collect clips and create a highlight reel
   <li>lxml</li>
   <li>Flask</li>
   <li>gevent</li>
+  <li>simpleobsws</li>
 </ul>
+
+<h5>Other Dependencies</h5>
+<ul>
+  <li>obs-websocket</li>
+</ul>
+
