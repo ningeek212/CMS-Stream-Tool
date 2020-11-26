@@ -28,7 +28,7 @@ def home():
 
 @app.route("/statscard/")
 def stats_page():
-    return render_template("stats_card_no_content.html")
+    return render_template("stats_card/stats_card_no_content.html")
 
 
 overlay_status_dict = {
@@ -63,8 +63,13 @@ def get_overlay_status():
 
 @app.route('/statscard/content/', methods=["GET"])
 def stats_content():
-    return render_template("stats_card_content.html", stats_for_card=stats,
+    return render_template("stats_card/stats_card_content.html", stats_for_card=stats,
                            map_info=overlay_status_dict["stats_card"]["map_info"])
+
+
+@app.route("/title_screen", methods=["GET"])
+def title_screen():
+    return render_template("title_screen/title.html")
 
 
 def start_server_thread():

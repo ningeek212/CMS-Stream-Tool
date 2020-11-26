@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>CMS Stream Tool - Title Screen</title>
+    <link rel="stylesheet" href="{{url_for('static', filename='assets/fonts/fonts.css')}}">
+    <script src="{{url_for('static', filename='assets/jquery-3.5.1.js')}}"></script>
+
+    <link rel="shortcut icon" href="{{ url_for('static', filename='favicon.ico') }}">
+</head>
+<script>
+
+</script>
+<style>
+
+  html, body {
+    margin: 0;
+    height: 100%;
+    background-color:#131313;
+  }
+
+  .primary-font {
+  font-family: VerdanaBold;
+  color: white;
+  font-size: 100px;
+  text-align: center;
+  text-shadow: 4px 4px #7d0000;
+  }
+
+  .secondary-font {
+  font-family: PermanentMarker;
+  color: white;
+  font-size: 70px;
+  text-align: center;
+  }
+
+  .white-font {
+  font-family: VerdanaBold;
+  color: white;
+  text-align: left;
+  width: 100%;
+  }
+
+  .centre-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+}
+
+.text-box {
+    text-align: center;
+}
+}
+
+</style>
+<body style="height:100%;">
+  <div class="centre-container">
+
+      <div class="text-box">
+          <h1 class="primary-font"><i>Next Map</i></h1>
+          <h1 class="secondary-font"><i>Pagodas 3</i></h1>
+      </div>
+  </div>
+
+</body>
+</html>
