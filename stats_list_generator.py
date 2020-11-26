@@ -108,10 +108,10 @@ def select_card_to_display():
     print("Please select which card you would like to display from the list below")
     count = 1
     for card in cards_list:
-        print("[{}] \033[94m{}\033[0m - {}".format(count, card[0].__name__, card[1]))
+        print("[{}] {} - {}".format(count, card[0].__name__, card[1]))
         count += 1
     response = int(input("Please make your selection: "))-1
-    print("You have chosen \033[94m{} - {}\033[0m".format(cards_list[response][0].__name__, cards_list[response][1]))
+    print("You have chosen {} - {}".format(cards_list[response][0].__name__, cards_list[response][1]))
     print("Displaying card for 20 seconds")
     cards_list[response][0]()
     fs.show_stats_card()

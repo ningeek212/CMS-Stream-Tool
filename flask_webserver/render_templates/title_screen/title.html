@@ -9,14 +9,43 @@
     <link rel="shortcut icon" href="{{ url_for('static', filename='favicon.ico') }}">
 </head>
 <script>
+$(document).ready(function(){
 
+    var text1 = "Text 1";
+    var text2 = "Text 2";
+
+    var current_text = 0;
+
+    function showText(){
+    console.log("showing text");
+    $("#small-text").fadeIn(1000);
+    };
+
+    function hideText(){
+    console.log("hiding text");
+    $("#small-text").fadeOut(1000);
+    };
+
+    function changeText(){
+        if (current_text == 0){
+            $('#small-text').text(text2);
+
+        } else {
+
+        }
+    };
+
+    setInterval(changeText, 10000);
+
+
+});
 </script>
 <style>
 
   html, body {
     margin: 0;
     height: 100%;
-    background-color:#131313;
+    background-color:#808080;
   }
 
   .primary-font {
@@ -32,6 +61,7 @@
   color: white;
   font-size: 70px;
   text-align: center;
+  text-shadow: 4px 4px #382a2a;
   }
 
   .white-font {
@@ -47,22 +77,28 @@
     justify-content: center;
     align-items: center;
     height: 100%;
-}
+    }
 
-.text-box {
+    .text-box {
     text-align: center;
-}
-}
+    }
+
+
+
+
+
+
+
 
 </style>
 <body style="height:100%;">
-  <div class="centre-container">
+<div class="centre-container">
 
-      <div class="text-box">
-          <h1 class="primary-font"><i>Next Map</i></h1>
-          <h1 class="secondary-font"><i>Pagodas 3</i></h1>
-      </div>
-  </div>
+    <div class="text-box">
+        <h1 class="primary-font" style="margin:10px;"><i>Large Text</i></h1>
+        <p id="small-text" class="secondary-font" style="margin:0px;">Small Text 1</p>
+    </div>
+</div>
 
 </body>
 </html>
