@@ -1,3 +1,4 @@
+numpy==1.19.3
 opencv_python==4.4.0.46
 Flask==1.1.2
 pandas==1.1.4
