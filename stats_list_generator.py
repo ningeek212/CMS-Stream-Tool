@@ -26,7 +26,7 @@ def headshots_kills_killstreak():
     fs.stats.append(fs.Stat("Most Headshots", headshots[1], headshots[0], "({0})".format(headshots[2])))
     fs.stats.append(fs.Stat("Most Kills", kills[1], kills[0], "({0})".format(kills[2])))
     fs.stats.append(fs.Stat("Highest Killstreak", killstreak[1], killstreak[0], "({0})".format(killstreak[2])))
-    fs.overlay_status_dict["stats_card"]["map_info"] = "Map Info Goes Here"
+    fs.overlay_status_dict["stats_card"]["map_info"] = "Kills Comparison"
 
 
 def archer_headshots_comparison():
