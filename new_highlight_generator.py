@@ -140,7 +140,7 @@ class HighlightGenerator:
         if self.processing_clip:
             print('')
             print('Still processing a clip')
-            pass
+            return
         elif not self.begin_frames:
             self.processing_high = True
             print('')
