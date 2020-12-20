@@ -1,0 +1,8 @@
+numpy==1.19.3
+opencv_python==4.4.0.46
+Flask==1.1.2
+pandas==1.1.4
+requests==2.24.0
+pynput==1.7.1
+simpleobsws==0.0.7
+gevent==20.9.0

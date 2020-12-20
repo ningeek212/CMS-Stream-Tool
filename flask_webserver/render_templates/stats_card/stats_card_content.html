@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="en">
+<!--
+This file contains content to be rendered by the Flask web server with the latest stats for the stats card
+
+JQuery will insert this HTML into the container and then animate the card
+ -->
+<h1 class="title-font">{{ map_info }}</h1>
+<div style="padding: 5px 16px;">
+    {% for stat in stats_for_card %}
+    <hr>
+    <div>
+        <h1 class="white-font" style="font-size: 35px">{{ stat.title}} - {{ stat.value }}</h1>
+        <div class="name-icon-container">
+            <img src="http://cravatar.eu/helmavatar/{{ stat.username }}/64.png" class="player-icon">
+            <h1 class="white-font" style="padding-left: 20px;">{{ stat.username }} {{ stat.kit }}</h1>
+        </div>
+    </div>
+    {% endfor %}
+</div>

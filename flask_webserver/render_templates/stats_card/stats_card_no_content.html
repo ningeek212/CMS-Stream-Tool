@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>CMS Stream Tool - Info Card</title>
+    <link rel="stylesheet" href="{{url_for('static', filename='assets/fonts/fonts.css')}}">
+    <script src="{{url_for('static', filename='assets/jquery-3.5.1.js')}}"></script>
+
+    <link rel="shortcut icon" href="{{ url_for('static', filename='favicon.ico') }}">
+</head>
+<script>
+$(document).ready(function(){
+    $("#stats-container").hide();
+    $(".card").hide();
+
+    function showAndHideCard(){
+        showCard(setTimeout(function(){
+            hideCard(setTimeout(showAndHideCard, 5000));
+        }, 5000));
+    };
+
+    function showCard(){
+    console.log("showing card");
+    $(".card").slideDown(1000, function(){
+        $("#stats-container").slideDown(1000);
+    })
+    };
+
+    function hideCard(){
+    console.log("hiding card");
+    $("#stats-container").slideUp(1000, function(){
+        $(".card").slideUp(1000);
+    })
+    };
+
+    var currentState = 0;
+
+    function checkStatus(){
+        $.get("/overlay_status", function(data, status){
+            var status = data["stats_card"]["status"]
+            console.log("current status " + status);
+            if (status == 0 && status != currentState) {
+                hideCard();
+                currentState = 0;
+            } else if (status == 1 && status != currentState) {
+                $("#stats-container").load("/statscard/content");
+                showCard();
+                currentState = 1;
+            } else {
+                console.log("doing nothing");
+            }
+
+        });
+    };
+
+    setInterval(checkStatus, 500);
+
+
+});
+</script>
+<style>
+    .card {
+  border-radius: 20px;
+  width: 800px;
+  background: #131313;
+  }
+
+  .container {
+  padding: 2px 16px 16px 16px;
+  }
+
+  .title-font {
+  font-family: PermanentMarker;
+  color: white;
+  width: 100%;
+  font-size: 60px;
+  text-align: center;
+  }
+
+  .white-font {
+  font-family: VerdanaBold;
+  color: white;
+  text-align: left;
+  width: 100%;
+  }
+
+  .player-icon{
+  border-radius: 5px;
+  }
+
+  .name-icon-container{
+  display: flex;
+  align-items: center;
+  }
+
+}
+
+</style>
+<body>
+
+
+<div class="card">
+    <img src="{{url_for('static', filename='images/cms_stats.png')}}" style="width:100%; border-radius: 20px 20px 0 0;" id="cms-image">
+    <div class="container" id="stats-container">
+
+    </div>
+</div>
+</body>
+</html>
