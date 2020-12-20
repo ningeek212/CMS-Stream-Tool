@@ -1,0 +1,24 @@
+@font-face {
+   font-family: Overpass;
+   src: url(overpass.ttf);
+}
+
+@font-face {
+   font-family: Pakenham;
+   src: url(pakenham.ttf);
+}
+
+@font-face {
+   font-family: PermanentMarker;
+   src: url(permanentmarker.ttf);
+}
+
+@font-face {
+   font-family: SteelFish;
+   src: url(steelfish.ttf);
+}
+
+@font-face {
+   font-family: VerdanaBold;
+   src: url(verdanab.ttf);
+}

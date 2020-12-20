@@ -11,7 +11,7 @@ from threading import Thread
 # TODO: Define these constants using a GUI
 LATEST_INSTANT_REPLAY_FILENAME = "latest_replay.mp4"
 CURRENT_INSTANT_REPLAY_FILENAME = "current_replay.mp4"
-LATEST_HIGHLIGHT_REEL_FILENAME = "latest_highlights.mp4"
+LATEST_HIGHLIGHT_REEL_FILENAME = "misc/latest_highlights.mp4"
 CURRENT_HIGHLIGHT_REEL_FILENAME = "highlight_reel.mp4"
 MAP_MESSAGES = ["First Map", "Second Map", "Third Map"]
 VIDEO_WIDTH = 1920

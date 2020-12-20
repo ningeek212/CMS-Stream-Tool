@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>CMS Stream Tool - Title Screen</title>
+    <link rel="stylesheet" href="{{url_for('static', filename='assets/fonts/fonts.css')}}">
+    <script src="{{url_for('static', filename='assets/jquery-3.5.1.js')}}"></script>
+
+    <link rel="shortcut icon" href="{{ url_for('static', filename='favicon.ico') }}">
+</head>
+<script>
+$(document).ready(function(){
+
+    var text1 = "CX vs FT";
+    var text2 = "Waiting for match to start";
+
+    var current_text = 0;
+    var fade_time = 1000;
+    var period = 10000;
+
+    function changeText(){
+        if (current_text == 0){
+            $('#small-text').animate({'opacity': 0}, fade_time, function () {
+                $(this).text(text2);
+                current_text = 1;
+            }).animate({'opacity': 1}, fade_time);
+        } else {
+            $('#small-text').animate({'opacity': 0}, fade_time, function () {
+                $(this).text(text1);
+                current_text = 0;
+            }).animate({'opacity': 1}, fade_time);
+        }
+    };
+
+    function updateText(){
+    $.get("/title_screen/data/", function(data){
+        text1 = data["small_text_1"]
+        text2 = data["small_text_2"]
+        $("#large-text").text(data["large_text"]);
+        $("#medium-text").text(data["medium_text"]);
+    });
+    };
+
+    setInterval(updateText, 2000);
+
+    changeText();
+    setInterval(changeText, period);
+
+
+});
+
+</script>
+<style>
+
+  html, body {
+    margin: 0;
+    height: 100%;
+    /*background-color:#808080;*/
+  }
+
+  .primary-font {
+  font-family: VerdanaBold;
+  color: white;
+  font-size: 150px;
+  text-align: center;
+  text-shadow: 4px 4px #382a2a;
+  font-style:italic;
+  }
+
+  .secondary-font {
+  font-family: Overpass;
+  color: white;
+  font-size: 100px;
+  text-align: center;
+  text-shadow: 4px 4px #382a2a;
+  }
+
+  .smallest-font{
+  text-shadow: 2px 2px #382a2a;
+  font-style:italic;
+  }
+
+
+  .centre-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+  }
+
+  .text-box {
+    text-align: center;
+    position:fixed;
+  }
+
+   #background-video {
+    right: 0;
+    bottom: 0;
+    min-width: 100%;
+    min-height: 100%;
+    position:fixed;
+   }
+
+
+
+
+
+
+
+</style>
+<body style="height:100%;">
+
+<video autoplay muted loop id="background-video">
+  <source src="{{ url_for('static', filename='video.mp4') }}" type="video/mp4">
+  Your browser does not support HTML5 video.
+</video>
+
+<div class="centre-container">
+
+    <div class="text-box">
+        <p id="large-text" class="primary-font" style="margin:10px;"><i>Next Map</i></p>
+        <p id="medium-text" class="secondary-font" style="margin:0px;">Lowrise</p>
+        <p id="small-text" class="secondary-font smallest-font" style="margin:0px; font-size:40px">Small text</p>
+    </div>
+</div>
+
+
+
+</body>
+</html>
