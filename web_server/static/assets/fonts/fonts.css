@@ -22,3 +22,8 @@
    font-family: VerdanaBold;
    src: url(verdanab.ttf);
 }
+
+@font-face {
+   font-family: RobotoBold;
+   src: url(RobotoBold.ttf);
+}

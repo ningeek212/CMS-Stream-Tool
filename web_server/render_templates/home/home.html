@@ -4,46 +4,29 @@
     <meta charset="UTF-8">
     <title>This is the home page</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='assets/fonts/fonts.css')}}">
-    <link rel="stylesheet" href="{{ url_for('static', filename='bulma.min.css')}}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css')}}">
     <script src="{{ url_for('static', filename='anime.js')}}"></script>
-    <script src="https://cdn.jsdelivr.net/npm/animejs@3.2.1/lib/anime.min.js"></script>
+    <script src="{{ url_for('static', filename='animations.js')}}"></script>
 </head>
-<script>
-function main(){
-    anime({
-        targets: '.is-pulsating',
-        opacity: 0,
-        easing: "easeInOutSine",
-        direction: 'alternate',
-        loop: true
-    });
-}
-
-document.addEventListener("DOMContentLoaded", main);
-</script>
 <style>
-.recording-dot{
-  width:40px;
-  height: 40px;
-  background-color: red;
-  border-radius: 50%;
-}
 
-body {
-  background-color: #131313;
-}
-
-.centre-container {
-    width: 50%;
-    margin: 70 auto;
-    position: absolute;
-    z-index: 2;
-  }
 </style>
 <body>
 
 <div class="centre-container">
-        <h1 class="title">Test</h1>
+    <div class="growing-box layer0" style="z-index:0; background-color: #7d0000">
+    </div>
+    <div class="growing-box layer1">
+        <h1 class="secondary-font slide-fade-down" style="margin:40px">CMS Stream Tool</h1>
+        <button class="slide-fade-down">Start a Stream</button>
+        <button class="slide-fade-down">Configure</button>
+    </div>
+
+
+    <!--
+    <h1 style="display: inline-block" class="primary-font ">CMS Stream Tool</h1>
+    <div class="recording-dot is-pulsating"></div>
+    -->
 </div>
 </body>
 </html>
