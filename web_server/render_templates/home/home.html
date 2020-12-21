@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>This is the home page</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='assets/fonts/fonts.css')}}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='bulma.min.css')}}">
+    <script src="{{ url_for('static', filename='anime.js')}}"></script>
+    <script src="https://cdn.jsdelivr.net/npm/animejs@3.2.1/lib/anime.min.js"></script>
+</head>
+<script>
+function main(){
+    anime({
+        targets: '.is-pulsating',
+        opacity: 0,
+        easing: "easeInOutSine",
+        direction: 'alternate',
+        loop: true
+    });
+}
+
+document.addEventListener("DOMContentLoaded", main);
+</script>
+<style>
+.recording-dot{
+  width:40px;
+  height: 40px;
+  background-color: red;
+  border-radius: 50%;
+}
+
+body {
+  background-color: #131313;
+}
+
+.centre-container {
+    width: 50%;
+    margin: 70 auto;
+    position: absolute;
+    z-index: 2;
+  }
+</style>
+<body>
+
+<div class="centre-container">
+        <h1 class="title">Test</h1>
+</div>
+</body>
+</html>

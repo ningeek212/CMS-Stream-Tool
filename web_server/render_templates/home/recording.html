@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Pulsating dot</title>
+    <script src="https://cdn.jsdelivr.net/npm/animejs@3.2.1/lib/anime.min.js"></script>
+</head>
+<style>
+    .recording-dot{
+  width:40px;
+  height: 40px;
+  background-color: red;
+  border-radius: 50%;
+}
+
+body {
+  background-color: #131313;
+}
+
+</style>
+<script>
+
+function main(){
+    anime({
+        targets: '.is-pulsating',
+        opacity: 0,
+        easing: "easeInOutSine",
+        direction: 'alternate',
+        loop: true
+    });
+}
+
+document.addEventListener("DOMContentLoaded", main);
+
+</script>
+<body>
+<div class="recording-dot is-pulsating"></div>
+</body>
+</html>
