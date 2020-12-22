@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+
+
+{% for key in keys %}
+<div id="config-contents">
+    <span class="small-text" style="font-size: 20px; margin: 20px;">{{ settings[key]["display_name"] }}</span>
+    <span style="float: right;">
+        {% if settings[key]['type'] == "select" %}
+        <select id="{{ key }}">
+            {% for option in settings[key]['options'] %}
+                {% if option == settings[key]['value'] %}
+                    <option selected value="{{ option }}">{{ option }}</option>
+                {% else %}
+                    <option value="{{ option }}">{{ option }}</option>
+                {% endif %}
+            {% endfor %}
+        </select>
+        {% else %}
+        <input id="{{ key }}" type="{{ settings[key]['data_type'] }}" value="{{ settings[key]['value'] }}">
+        {% endif %}
+    </span>
+</div>
+
+{% endfor %}

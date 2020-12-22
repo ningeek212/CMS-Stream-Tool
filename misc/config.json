@@ -1,0 +1,64 @@
+{
+  "frame_height": {
+    "display_name": "Frame Height",
+    "options": [
+      720,
+      1080,
+      1440,
+      2160
+    ],
+    "setting_id": 4,
+    "type": "select",
+    "value": 1080
+  },
+  "frame_rate": {
+    "display_name": "Output Frame Rate",
+    "options": [
+      30,
+      60
+    ],
+    "setting_id": 2,
+    "type": "select",
+    "value": 60
+  },
+  "frame_width": {
+    "display_name": "Frame Width",
+    "options": [
+      1280,
+      1920,
+      2560,
+      3840
+    ],
+    "setting_id": 3,
+    "type": "select",
+    "value": 1920
+  },
+  "number_of_maps": {
+    "data_type": "number",
+    "display_name": "Number of Maps",
+    "setting_id": 7,
+    "type": "input",
+    "value": 8
+  },
+  "obs_web_socket_port": {
+    "data_type": "number",
+    "display_name": "OBS Web-socket Server Port",
+    "setting_id": 6,
+    "type": "input",
+    "value": 4444
+  },
+  "streamer_name": {
+    "data_type": "text",
+    "display_name": "Streamer Name",
+    "setting_id": 1,
+    "type": "input",
+    "value": "Ninsanity"
+  },
+  "web_server_port": {
+    "data_type": "number",
+    "display_name": "Web Server Port",
+    "setting_id": 5,
+    "type": "input",
+    "value": 5000
+  }
+}
