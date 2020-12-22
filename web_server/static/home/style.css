@@ -1,7 +1,7 @@
 .recording-dot{
   width:20px;
   height: 20px;
-  background-color: red;
+  background-color: #7d0000;
   border-radius: 50%;
   display:inline-block;
   margin: 10px;
@@ -68,11 +68,34 @@ input:focus{
 }
 
 button {
-    background-color: #7d0000;
-    border-radius: 4px;
-    width: 50%;
-    height: 10%;
+    background-color: white;
+    border-radius: 10px;
+    width: 175px;
+    height: 50px;
     font-family: Overpass;
     font-weight: bold;
     font-size: 20px;
+    border: 2px solid #131313;
+    margin: 10px;
+    cursor: pointer;
+}
+
+
+.small-text {
+    font-family: Overpass;
+    color: #131313;
+}
+
+a:link, a:visited {
+  color: #131313;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+a:link:active, a:visited:active {
+  color: #131313;
+}
+
+a:hover {
+    color: #7d0000;
 }

@@ -4,13 +4,10 @@
     <meta charset="UTF-8">
     <title>This is the home page</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='assets/fonts/fonts.css')}}">
-    <link rel="stylesheet" href="{{ url_for('static', filename='style.css')}}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='home/style.css')}}">
     <script src="{{ url_for('static', filename='anime.js')}}"></script>
-    <script src="{{ url_for('static', filename='animations.js')}}"></script>
+    <script src="{{ url_for('static', filename='home/functions.js')}}"></script>
 </head>
-<style>
-
-</style>
 <body>
 
 <div class="centre-container">
@@ -18,15 +15,18 @@
     </div>
     <div class="growing-box layer1">
         <h1 class="secondary-font slide-fade-down" style="margin:40px">CMS Stream Tool</h1>
-        <button class="slide-fade-down">Start a Stream</button>
-        <button class="slide-fade-down">Configure</button>
+        <button class="slide-fade-down animated-button" id="startButton" onclick="startStream()">Start a Stream</button>
+        <button class="slide-fade-down animated-button" id="configButton" onclick="enterConfig()">Configure</button>
+        <div class="slide-fade-down" style="display: flex; align-items: center; justify-content: center;">
+            <span class="recording-dot is-pulsating"></span>
+            <span class="slide-fade-down small-text">
+                <a href="https://github.com/ningeek212/CMS-Stream-Tool/" target="_blank">
+                    Developed by Ninsanity and TomD53
+                </a>
+            </span>
+        </div>
+
     </div>
-
-
-    <!--
-    <h1 style="display: inline-block" class="primary-font ">CMS Stream Tool</h1>
-    <div class="recording-dot is-pulsating"></div>
-    -->
 </div>
 </body>
 </html>
