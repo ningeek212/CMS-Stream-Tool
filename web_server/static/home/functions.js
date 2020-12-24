@@ -2,6 +2,54 @@ function startStream(){
     console.log("Start stream button pressed");
 }
 
+function changeHotkey(key){
+    var button = document.getElementById(key);
+    var button_prev_text = button.innerText;
+    button.innerText = "[editing]";
+    anime({
+        targets: button,
+        scale: 0.8,
+        backgroundColor: '#7d0000',
+        color: '#FFF',
+        duration: 500,
+        easing: "easeOutExpo"
+    });
+    var url = config_update_hotkey_route + "?hotkey_name=" + key;
+    $.get(url, function(data, status){
+        if ( data["success"] == "true" ){
+            button.innerText = data["hotkey_string"];
+            var t3 = anime.timeline();
+            t3.add({
+                targets: button,
+                scale: 1,
+                backgroundColor: '#8aff70',
+                color: '#000000',
+                duration: 500,
+                easing: "easeOutExpo"
+            })
+            t3.add({
+                targets: button,
+                scale: 1,
+                backgroundColor: '#FFF',
+                duration: 500,
+                easing: "easeOutExpo"
+            })
+        } else {
+            alert(data["error"]);
+            anime({
+                targets: button,
+                scale: 1,
+                backgroundColor: '#FFF',
+                color: '#000000',
+                duration: 500,
+                easing: "easeOutExpo"
+            });
+            console.log(button_prev_text);
+            button.innerHTML = button_prev_text;
+        }
+    });
+}
+
 function enterConfig(){
     console.log("Starting config menu");
 
@@ -109,15 +157,7 @@ function saveConfig(){
     });
 }
 
-function main(){
-
-    $('#config-container').hide();
-
-    function addButtonEvents(){
-        var buttons = document.querySelectorAll('.animated-button');  // Select elements with animated button class
-
-
-        function enterButton(button) {
+function enterButton(button) {
             // This function defines the animation for when the cursor enters the button
             anime.remove(button);
             anime({
@@ -138,40 +178,48 @@ function main(){
             });
         };
 
-        function leaveButton(button) {
-            // This function defines the animation for when the cursor leaves the button
-            anime.remove(button);
-            anime({
-                targets: button,
-                scale: 1,
-                backgroundColor: '#FFF',
-                color: '#131313',
-                duration: 500,
-                easing: "easeOutExpo"
-            });
-            // Shrink back title text
-            anime({
-                targets: ".secondary-font",
-                scale: 1,
-                duration: 2000,
-                easing: "easeOutExpo"
-            });
-        };
+function leaveButton(button) {
+    // This function defines the animation for when the cursor leaves the button
+    anime.remove(button);
+    anime({
+        targets: button,
+        scale: 1,
+        backgroundColor: '#FFF',
+        color: '#131313',
+        duration: 500,
+        easing: "easeOutExpo"
+    });
+    // Shrink back title text
+    anime({
+        targets: ".secondary-font",
+        scale: 1,
+        duration: 2000,
+        easing: "easeOutExpo"
+    });
+};
 
-        for (var i = 0; i < buttons.length; i++) {
-            // Loop through all the buttons on the web page and add their event listeners
+function addButtonEvents(){
+    var buttons = document.querySelectorAll('.animated-button');  // Select elements with animated button class
 
-            // Adding "mouse enter" event listener
-            buttons[i].addEventListener('mouseenter', function(e) {
-                enterButton(e.target);
-            }, false);
+    for (var i = 0; i < buttons.length; i++) {
+        // Loop through all the buttons on the web page and add their event listeners
 
-            // Adding "mouse leave" event listener
-            buttons[i].addEventListener('mouseleave', function(e) {
-                leaveButton(e.target)
-            }, false);
-        }
+        // Adding "mouse enter" event listener
+        buttons[i].addEventListener('mouseenter', function(e) {
+            enterButton(e.target);
+        }, false);
+
+        // Adding "mouse leave" event listener
+        buttons[i].addEventListener('mouseleave', function(e) {
+            leaveButton(e.target)
+        }, false);
     }
+}
+
+function main(){
+    // When the document is fully loaded, execute the following code:
+
+    $('#config-container').hide();
 
     anime({
         targets: '.is-pulsating',
@@ -213,16 +261,14 @@ function main(){
         easing: "easeOutExpo",
         delay: anime.stagger(200),  // Each element with the slide-fade-down class will animate 200ms after the last
         duration: 600,
-
-
+        complete:addButtonEvents
+        // Not adding the button event listeners until after the entry animation has completed else it causes bugs
     })
 
     t1.add({
         targets: '.secondary-font',
         textShadow: '2px 2px rgb(125, 0, 0)',
         easing: "easeInOutExpo",
-        complete:addButtonEvents
-        // Not adding the button event listeners until after the entry animation has completed else it causes bugs
     })
 
 }

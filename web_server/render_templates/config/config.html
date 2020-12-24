@@ -6,7 +6,7 @@
     <span class="small-text" style="font-size: 20px; margin: 20px;">{{ settings[key]["display_name"] }}</span>
     <span style="float: right;">
         {% if settings[key]['type'] == "select" %}
-        <select id="{{ key }}">
+        <select class="config-form" id="{{ key }}">
             {% for option in settings[key]['options'] %}
                 {% if option == settings[key]['value'] %}
                     <option selected value="{{ option }}">{{ option }}</option>
@@ -15,8 +15,12 @@
                 {% endif %}
             {% endfor %}
         </select>
-        {% else %}
-        <input id="{{ key }}" type="{{ settings[key]['data_type'] }}" value="{{ settings[key]['value'] }}">
+        {% elif settings[key]['type'] == "input" %}
+        <input class="config-form" id="{{ key }}" type="{{ settings[key]['data_type'] }}" value="{{ settings[key]['value'] }}">
+        {% elif settings[key]['type'] == "hotkey" %}
+        <button id="{{ key }}" class="config-form" onclick="changeHotkey('{{ key }}')">
+            {{ settings[key]['hotkey_string'] }}
+        </button>
         {% endif %}
     </span>
 </div>

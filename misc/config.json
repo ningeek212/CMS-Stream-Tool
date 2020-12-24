@@ -33,12 +33,33 @@
     "type": "select",
     "value": 1920
   },
-  "number_of_maps": {
-    "data_type": "number",
-    "display_name": "Number of Maps",
+  "hotkey_scene_highlights": {
+    "display_name": "Switch to Scene: Highlights",
+    "hotkey_string": "6",
+    "setting_id": 9,
+    "type": "hotkey",
+    "value": [
+      77
+    ]
+  },
+  "hotkey_scene_minecraft": {
+    "display_name": "Switch to Scene: Minecraft",
+    "hotkey_string": "ctrl+6",
     "setting_id": 7,
-    "type": "input",
-    "value": 8
+    "type": "hotkey",
+    "value": [
+      29,
+      77
+    ]
+  },
+  "hotkey_scene_next_map": {
+    "display_name": "Switch to Scene: Next Map",
+    "hotkey_string": "5",
+    "setting_id": 8,
+    "type": "hotkey",
+    "value": [
+      76
+    ]
   },
   "obs_web_socket_port": {
     "data_type": "number",
@@ -52,7 +73,7 @@
     "display_name": "Streamer Name",
     "setting_id": 1,
     "type": "input",
-    "value": "Ninsanity"
+    "value": "TomD53"
   },
   "web_server_port": {
     "data_type": "number",
