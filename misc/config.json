@@ -44,12 +44,12 @@
   },
   "hotkey_scene_minecraft": {
     "display_name": "Switch to Scene: Minecraft",
-    "hotkey_string": "ctrl+6",
+    "hotkey_string": "alt+5",
     "setting_id": 7,
     "type": "hotkey",
     "value": [
-      29,
-      77
+      56,
+      76
     ]
   },
   "hotkey_scene_next_map": {

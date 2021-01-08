@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Map Testing</title>
+    <script src="{{ url_for('static', filename='jquery-3.5.1.min.js')}}"></script>
+</head>
+<script>
+
+    function main(){
+        getMapJson();
+    }
+
+    var maps_json = "";
+
+    function getMapJson(){
+        $.getJSON("{{ url_for('static', filename='maps.json')}}", function(data){
+            console.log(data);
+            maps_json = data;
+            var input = document.getElementById("map-input");
+            input.addEventListener('input', search_maps);
+            console.log(maps_json);
+
+        });
+    }
+
+    function search_maps(){
+        var input = document.getElementById("map-input");
+        var map_to_find = input.value.toLowerCase();
+        $('#result').html("");
+        for(var i in maps_json){
+            var map_name = maps_json[i]["name"].toLowerCase();
+            var search_result = map_name.search(map_to_find);
+            if(search_result != -1){
+                $('#result').append('<p>' + maps_json[i]["name"] + '</p>');
+            }
+        }
+    }
+
+    document.addEventListener("DOMContentLoaded", main);
+</script>
+<body>
+<input type="text" id="map-input">
+<div id="result">
+</div>
+</body>
+</html>

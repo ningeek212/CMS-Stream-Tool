@@ -26,6 +26,10 @@ class ConfigView(FlaskView):
     def dict(self):
         return jsonify(get_config_dict())
 
+    @route("/maptest")
+    def map_test(self):
+        return render_template("config/maptest.html")
+
     @route("/submit", methods=["POST"])
     def submit(self):
         config_dict = get_config_dict()
