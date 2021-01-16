@@ -19,11 +19,10 @@ CURRENT_HIGHLIGHT_REEL_FILENAME = "highlight_reel.mp4"
 MAP_MESSAGES = ["First Map", "Second Map", "Third Map"]
 VIDEO_WIDTH = 1920
 VIDEO_HEIGHT = 1080
-VIDEO_FPS = 30
-teams = ['team a', 'team b']
-maps = ['Lowrise', 'Desert Strike', 'Castle Caverns']
+VIDEO_FPS = 60
+teams = ['Olympus', 'Fotia']
+maps = ['Forest of Rivals']
 num_maps = 3
-
 # # Get team names, map names, and file locations from user
 # correct_input = False
 # while not correct_input:
@@ -179,6 +178,13 @@ class HighlightGenerator:
             self.out = cv2.VideoWriter(LATEST_HIGHLIGHT_REEL_FILENAME,
                                        cv2.VideoWriter_fourcc('m', 'p', '4', 'v'),
                                        VIDEO_FPS, (VIDEO_WIDTH, VIDEO_HEIGHT), 1)
+            answer = 'n'
+            while answer != 'y':
+                print('')
+                maps.append(input('Enter next map: '))
+                print('')
+                answer = input('Is {} the correct map? (y/n) '.format(maps[self.map_number]))
+
             print('')
             print('=======================')
             print('Beginning ' + maps[self.map_number] + ' clip collection')

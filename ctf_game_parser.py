@@ -43,6 +43,17 @@ class CTFGameParser:
 
         self.set_player_kits()
 
+    def process_game_stats(self, game_id):
+        self.game = game_id
+        game_html = requests.get('https://www.brawl.com/MPS/MPSStatsCTF.php?game={0}'.format(self.game)).text
+        table_loc = re.split('(<table width=\"100%\" border=\"1\">)|(</table>)', game_html)
+        stat_table_html = table_loc[1] + table_loc[3] + table_loc[5]
+        kit_table_html = table_loc[7] + table_loc[9] + table_loc[11]
+        self.stat_table = html.read_html(stat_table_html)[0]
+        self.kit_table = html.read_html(kit_table_html)[0]
+
+        self.set_player_kits()
+
     def get_stats(self, stat_name, n=1):
         if not self.stat_table.empty:
             lower_stat_name = stat_name.lower()
