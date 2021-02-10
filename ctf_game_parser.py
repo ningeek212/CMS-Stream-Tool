@@ -59,11 +59,10 @@ class CTFGameParser:
             lower_stat_name = stat_name.lower()
             stats = self.stat_table.nlargest(n, lower_stat_name, 'all')  # Get largest n stats
             records = stats[['name', lower_stat_name]].to_records(index=False)  # Get IGN and stat from data frame
-            test = list(records)  # Convert dataframe to list of tuples
+            list_records = list(records)  # Convert dataframe to list of tuples
             ret_val = []
-            for player in test:
-                player_name = player[0]
-                ret_val.append((player_name, round(player[1], 2), self.get_player_kit(player_name)))
+            for player in list_records:
+                ret_val.append((player[0], round(player[1], 2), self.get_player_kit(player[0])))
             return ret_val
         else:
             return []
@@ -75,7 +74,11 @@ class CTFGameParser:
             kit_stats = self.kit_table.loc[self.kit_table['kit_type'] == upper_kit_name]  # Get kit_name stats
             stats = kit_stats.nlargest(n, lower_stat_name, 'all')  # Get largest n stats
             records = stats[['name', lower_stat_name]].to_records(index=False)  # Get IGN and stat from data frame
-            return list(records)  # Convert dataframe to list of tuples
+            list_records =  list(records)  # Convert dataframe to list of tuples
+            ret_val = []
+            for player in list_records:
+                ret_val.append((player[0], round(player[1], 2)))
+            return ret_val
         else:
             return []
 
