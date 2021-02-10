@@ -65,6 +65,7 @@ $(document).ready(function(){
   text-align: center;
   text-shadow: 4px 4px #382a2a;
   font-style:italic;
+  line-height: 140px;
   }
 
   .secondary-font {
@@ -99,9 +100,10 @@ $(document).ready(function(){
 <div class="centre-container">
 
     <div class="text-box">
-        <p id="large-text" class="primary-font" style="margin:10px;"><i>Large Text</i></p>
-        <p id="medium-text" class="secondary-font" style="margin:0px;">Medium Text</p>
-        <p id="small-text" class="secondary-font smallest-font" style="margin:0px; font-size:40px">Small text</p>
+        <p id="large-text" class="secondary-font smallest-font" style="margin:0px; font-size:40px"><i>Large Text</i></p>
+        <p id="medium-text" class="primary-font" style="margin:0px;">Medium Text</p>
+        <p id="small-text" class="secondary-font smallest-font"
+           style="margin:0px; font-size:40px; line-height: 120px;">Small text</p>
     </div>
 </div>
 </body>

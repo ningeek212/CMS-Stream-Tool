@@ -63,7 +63,7 @@ class CTFGameParser:
             ret_val = []
             for player in test:
                 player_name = player[0]
-                ret_val.append((player_name, player[1], self.get_player_kit(player_name)))
+                ret_val.append((player_name, round(player[1], 2), self.get_player_kit(player_name)))
             return ret_val
         else:
             return []

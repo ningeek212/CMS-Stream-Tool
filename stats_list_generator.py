@@ -39,7 +39,7 @@ def archer_headshots_comparison():
 def archer_damage_taken_comparison():
     fs.stats = []
     for stat in stats_parser.get_kit_stats("damage_received", "archer", 2):
-        fs.stats.append(fs.Stat("Damage Received", stat[1].round(1), stat[0], "(Archer)"))
+        fs.stats.append(fs.Stat("Damage Received", stat[1], stat[0], "(Archer)"))
     fs.overlay_status_dict["stats_card"]["map_info"] = "Archer Comparison"
 
 
@@ -57,7 +57,7 @@ def offense_statistics():
 def medic_pressure():
     fs.stats = []
     for stat in stats_parser.get_kit_stats("damage_received", "medic", 2):
-        fs.stats.append(fs.Stat("Damage Received", stat[1].round(1), stat[0], "(Medic)"))
+        fs.stats.append(fs.Stat("Damage Received", stat[1], stat[0], "(Medic)"))
     fs.overlay_status_dict["stats_card"]["map_info"] = "Medic Pressure"
 
 
